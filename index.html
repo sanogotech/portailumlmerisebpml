@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -1081,279 +1080,717 @@
       // Setup any initial functionality
     });
 
-    // Show details in modal
-    function showDetails(type) {
-      let title = '';
-      let content = '';
+  function showDetails(type) {
+  let title = '';
+  let content = '';
 
-      switch(type) {
-        case 'uml-intro':
-          title = 'Diagrammes comportementaux en UML';
-          content = `
-            <p>Les diagrammes comportementaux en UML décrivent les interactions et les dynamiques du système :</p>
+  switch(type) {
+    // UML Details
+    case 'uml-intro':
+      title = 'Diagrammes comportementaux en UML';
+      content = `
+        <p>Les diagrammes comportementaux en UML décrivent les interactions et les dynamiques du système :</p>
+        <ol>
+          <li><strong>Diagramme de séquence :</strong> Interactions temporelles entre objets</li>
+          <li><strong>Diagramme de cas d'utilisation :</strong> Fonctionnalités du système</li>
+          <li><strong>Diagramme d'activité :</strong> Flux de processus métier</li>
+          <li><strong>Diagramme d'états-transitions :</strong> Comportement des objets</li>
+          <li><strong>Diagramme de communication :</strong> Interactions entre objets (alternative au séquence)</li>
+          <li><strong>Diagramme de temps :</strong> Contraintes temporelles</li>
+          <li><strong>Diagramme global d'interactions :</strong> Vue d'ensemble des interactions</li>
+        </ol>
+        <div class="alert alert-info mt-3">
+          <p><strong>Astuce :</strong> Les diagrammes comportementaux sont particulièrement utiles pour modéliser la dynamique du système et les interactions entre les différents composants.</p>
+        </div>
+      `;
+      break;
+
+    case 'uml-classes':
+      title = 'Relations entre classes en UML';
+      content = `
+        <p>Les principales relations entre classes en UML :</p>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Relation</th>
+              <th>Symbole</th>
+              <th>Description</th>
+              <th>Exemple</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Association</td>
+              <td>———</td>
+              <td>Lien sémantique entre classes</td>
+              <td>Client — Commande</td>
+            </tr>
+            <tr>
+              <td>Agrégation</td>
+              <td>———◇</td>
+              <td>Relation "partie de" (faible)</td>
+              <td>Voiture ◇— Roue</td>
+            </tr>
+            <tr>
+              <td>Composition</td>
+              <td>———◆</td>
+              <td>Relation "partie de" (forte)</td>
+              <td>Maison ◆— Pièce</td>
+            </tr>
+            <tr>
+              <td>Héritage</td>
+              <td>———▷</td>
+              <td>Relation "est un"</td>
+              <td>Animal ▷ Chien</td>
+            </tr>
+            <tr>
+              <td>Dépendance</td>
+              <td>- - - ▷</td>
+              <td>Utilisation temporaire</td>
+              <td>Facture - - ▷ Produit</td>
+            </tr>
+            <tr>
+              <td>Réalisation</td>
+              <td>- - - ▷</td>
+              <td>Implémentation d'interface</td>
+              <td>Liste - - ▷ IList</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mt-3">
+          <h5>Multiplicités</h5>
+          <p>Les cardinalités précisent le nombre d'instances possibles :</p>
+          <ul>
+            <li><strong>1 :</strong> Exactement une instance</li>
+            <li><strong>0..1 :</strong> Zéro ou une instance</li>
+            <li><strong>1..* :</strong> Au moins une instance</li>
+            <li><strong>* ou 0..* :</strong> Zéro ou plusieurs instances</li>
+            <li><strong>n..m :</strong> Entre n et m instances</li>
+          </ul>
+        </div>
+      `;
+      break;
+
+    case 'uml-sequence':
+      title = 'Diagramme de Séquence UML';
+      content = `
+        <p>Le diagramme de séquence montre les interactions entre objets dans l'ordre chronologique :</p>
+        <img src="https://via.placeholder.com/600x200?text=Exemple+Diagramme+Sequence" class="img-fluid mb-3">
+        <h5>Éléments clés :</h5>
+        <ul>
+          <li><strong>Ligne de vie :</strong> Représente un objet participant à l'interaction</li>
+          <li><strong>Activation :</strong> Rectangle sur la ligne de vie montrant la période d'activité</li>
+          <li><strong>Message :</strong> Flèche entre lignes de vie (synchrone, asynchrone, retour)</li>
+          <li><strong>Fragment combiné :</strong> Zone conditionnelle (alt, opt, loop, par)</li>
+        </ul>
+        <div class="alert alert-info mt-3">
+          <p><strong>Bon usage :</strong> Utilisez les diagrammes de séquence pour modéliser des cas d'utilisation complexes ou pour expliquer des algorithmes.</p>
+        </div>
+      `;
+      break;
+
+    // Merise Details
+    case 'merise-concepts':
+      title = 'Méthode Merise en détail';
+      content = `
+        <p>La méthode Merise repose sur plusieurs concepts clés :</p>
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Cycles de vie</h5>
             <ol>
-              <li><strong>Diagramme de séquence :</strong> Interactions temporelles entre objets</li>
-              <li><strong>Diagramme de cas d'utilisation :</strong> Fonctionnalités du système</li>
-              <li><strong>Diagramme d'activité :</strong> Flux de processus métier</li>
-              <li><strong>Diagramme d'états-transitions :</strong> Comportement des objets</li>
-              <li><strong>Diagramme de communication :</strong> Interactions entre objets (alternative au séquence)</li>
-              <li><strong>Diagramme de temps :</strong> Contraintes temporelles</li>
-              <li><strong>Diagramme global d'interactions :</strong> Vue d'ensemble des interactions</li>
+              <li><strong>Cycle d'abstraction :</strong> Conceptuel → Logique → Physique</li>
+              <li><strong>Cycle de décision :</strong> Stratégique → Organisationnel → Opérationnel</li>
+              <li><strong>Cycle de réalisation :</strong> Étude → Conception → Réalisation → Exploitation</li>
             </ol>
-          `;
-          break;
-        case 'uml-classes':
-          title = 'Relations entre classes en UML';
-          content = `
-            <p>Les principales relations entre classes en UML :</p>
-            <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th>Relation</th>
-                  <th>Symbole</th>
-                  <th>Description</th>
-                  <th>Exemple</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Association</td>
-                  <td>———</td>
-                  <td>Lien sémantique entre classes</td>
-                  <td>Client — Commande</td>
-                </tr>
-                <tr>
-                  <td>Agrégation</td>
-                  <td>———◇</td>
-                  <td>Relation "partie de" (faible)</td>
-                  <td>Voiture ◇— Roue</td>
-                </tr>
-                <tr>
-                  <td>Composition</td>
-                  <td>———◆</td>
-                  <td>Relation "partie de" (forte)</td>
-                  <td>Maison ◆— Pièce</td>
-                </tr>
-                <tr>
-                  <td>Héritage</td>
-                  <td>———▷</td>
-                  <td>Relation "est un"</td>
-                  <td>Animal ▷ Chien</td>
-                </tr>
-                <tr>
-                  <td>Dépendance</td>
-                  <td>- - - ▷</td>
-                  <td>Utilisation temporaire</td>
-                  <td>Facture - - ▷ Produit</td>
-                </tr>
-              </tbody>
-            </table>
-          `;
-          break;
-        case 'merise-concepts':
-          title = 'Méthode Merise en détail';
-          content = `
-            <p>La méthode Merise repose sur plusieurs concepts clés :</p>
-            <div class="row">
-              <div class="col-md-6">
-                <h5>Cycles de vie</h5>
-                <ol>
-                  <li><strong>Cycle d'abstraction :</strong> Conceptuel → Logique → Physique</li>
-                  <li><strong>Cycle de décision :</strong> Stratégique → Organisationnel → Opérationnel</li>
-                  <li><strong>Cycle de réalisation :</strong> Étude → Conception → Réalisation → Exploitation</li>
-                </ol>
-              </div>
-              <div class="col-md-6">
-                <h5>Principes fondamentaux</h5>
-                <ul>
-                  <li>Séparation données/traitements</li>
-                  <li>Approche systémique</li>
-                  <li>Modélisation progressive</li>
-                  <li>Validation à chaque étape</li>
-                </ul>
-              </div>
-            </div>
-            <div class="alert alert-info mt-3">
-              <p>Merise est particulièrement adaptée pour les projets complexes nécessitant une modélisation rigoureuse des données.</p>
-            </div>
-          `;
-          break;
-        case 'bibliotheque':
-          title = 'Cas pratique : Système de bibliothèque';
-          content = `
-            <h5>Contexte :</h5>
-            <p>Une bibliothèque universitaire souhaite moderniser son système de gestion des prêts. Les besoins principaux sont :</p>
+          </div>
+          <div class="col-md-6">
+            <h5>Principes fondamentaux</h5>
             <ul>
-              <li>Gestion des adhérents (étudiants, professeurs)</li>
-              <li>Gestion des documents (livres, thèses, périodiques)</li>
-              <li>Gestion des emprunts et retours</li>
-              <li>Gestion des réservations</li>
-              <li>Calcul des pénalités de retard</li>
+              <li>Séparation données/traitements</li>
+              <li>Approche systémique</li>
+              <li>Modélisation progressive</li>
+              <li>Validation à chaque étape</li>
             </ul>
-            
-            <h5 class="mt-4">Solution UML :</h5>
-            <div class="row">
-              <div class="col-md-6">
-                <h6>Diagramme de classes</h6>
-                <ul>
-                  <li>Classe <strong>Adhérent</strong> avec sous-classes Étudiant et Professeur</li>
-                  <li>Classe <strong>Document</strong> avec sous-classes Livre, Thèse, Périodique</li>
-                  <li>Classe <strong>Emprunt</strong> en association avec Adhérent et Document</li>
-                  <li>Classe <strong>Réservation</strong> pour gérer les files d'attente</li>
-                </ul>
-              </div>
-              <div class="col-md-6">
-                <h6>Diagramme de cas d'utilisation</h6>
-                <ul>
-                  <li>Acteurs : Adhérent, Bibliothécaire, Système de paiement</li>
-                  <li>Cas d'utilisation : Emprunter, Prolonger, Réserver, Payer amende</li>
-                </ul>
-              </div>
-            </div>
-            
-            <h5 class="mt-4">Solution Merise :</h5>
-            <div class="row">
-              <div class="col-md-6">
-                <h6>MCD</h6>
-                <ul>
-                  <li>Entités : ADHERENT, DOCUMENT, EMPRUNT, RESERVATION</li>
-                  <li>Associations : PASSER (ADHERENT-EMPRUNT), CONCERNER (EMPRUNT-DOCUMENT)</li>
-                  <li>Cardinalités : Un adhérent peut passer plusieurs emprunts (1,n)</li>
-                </ul>
-              </div>
-              <div class="col-md-6">
-                <h6>MLD</h6>
-                <ul>
-                  <li>Tables : ADHERENT(id, nom, type, ...), DOCUMENT(id, titre, type, ...)</li>
-                  <li>Table de liaison EMPRUNT(id, id_adherent, id_document, date_emprunt, ...)</li>
-                  <li>Clés étrangères pour gérer les relations</li>
-                </ul>
-              </div>
-            </div>
-          `;
-          break;
-      }
+          </div>
+        </div>
+        <div class="alert alert-info mt-3">
+          <p>Merise est particulièrement adaptée pour les projets complexes nécessitant une modélisation rigoureuse des données.</p>
+        </div>
+      `;
+      break;
 
-      detailsModalTitle.textContent = title;
-      detailsModalContent.innerHTML = content;
-      detailsModal.show();
-    }
+    case 'merise-mcd':
+      title = 'Modèle Conceptuel de Données (MCD)';
+      content = `
+        <p>Le MCD représente les données et leurs relations indépendamment de toute implémentation :</p>
+        <img src="https://via.placeholder.com/500x300?text=Exemple+MCD" class="img-fluid mb-3">
+        <h5>Composants principaux :</h5>
+        <ul>
+          <li><strong>Entité :</strong> Concept important du domaine (ellipse)</li>
+          <li><strong>Association :</strong> Lien sémantique entre entités (rectangle)</li>
+          <li><strong>Propriété :</strong> Caractéristique d'une entité ou association</li>
+          <li><strong>Cardinalité :</strong> Nombre de relations possibles (ex: 1,n)</li>
+        </ul>
+        <h5 class="mt-3">Règles de bonne pratique :</h5>
+        <ol>
+          <li>Une entité doit avoir au moins une propriété</li>
+          <li>Éviter les associations réflexives complexes</li>
+          <li>Nommer clairement les entités et associations</li>
+          <li>Vérifier les cardinalités avec le métier</li>
+        </ol>
+      `;
+      break;
 
-    function showCaseStudy(caseId) {
-      let title = '';
-      let content = '';
-
-      switch(caseId) {
-        case 'bibliotheque':
-          title = 'Cas pratique complet : Système de bibliothèque';
-          content = `
-            <h5>Contexte :</h5>
-            <p>Une grande bibliothèque universitaire souhaite moderniser son système de gestion des prêts. Les besoins fonctionnels sont :</p>
-            <ul>
-              <li>Gestion des adhérents (étudiants, professeurs, personnel) avec différents droits</li>
-              <li>Gestion d'un catalogue de documents divers (livres, thèses, périodiques, DVD)</li>
-              <li>Gestion des emprunts avec durée variable selon le type de document et d'adhérent</li>
-              <li>Système de réservation avec file d'attente</li>
-              <li>Calcul automatique des pénalités de retard</li>
-              <li>Gestion des acquisitions et du désherbage</li>
-            </ul>
-            
-            <h5 class="mt-4">Analyse UML :</h5>
-            <div class="row">
-              <div class="col-md-6">
-                <h6>Diagramme de classes</h6>
-                <img src="https://via.placeholder.com/400x300?text=Diagramme+de+classes" class="img-fluid mb-3">
-                <p>Principales classes :</p>
-                <ul>
-                  <li><strong>Utilisateur</strong> (classe abstraite) avec sous-classes Étudiant, Professeur, Bibliothécaire</li>
-                  <li><strong>Document</strong> (classe abstraite) avec sous-classes Livre, Thèse, Périodique, DVD</li>
-                  <li><strong>Emprunt</strong> avec associations vers Utilisateur et Document</li>
-                  <li><strong>Réservation</strong> pour gérer les files d'attente</li>
-                  <li><strong>Exemplaire</strong> pour gérer les copies physiques</li>
-                </ul>
-              </div>
-              <div class="col-md-6">
-                <h6>Diagramme de cas d'utilisation</h6>
-                <img src="https://via.placeholder.com/400x200?text=Cas+d'utilisation" class="img-fluid mb-3">
-                <p>Principaux cas :</p>
-                <ul>
-                  <li><strong>Emprunter un document</strong> (avec vérification des droits)</li>
-                  <li><strong>Prolonger un emprunt</strong> (si pas de réservation)</li>
-                  <li><strong>Réserver un document</strong> indisponible</li>
-                  <li><strong>Gérer les pénalités</strong> de retard</li>
-                  <li><strong>Gérer le catalogue</strong> (ajout, suppression, modification)</li>
-                </ul>
-              </div>
-            </div>
-            
-            <h5 class="mt-4">Conception Merise :</h5>
-            <div class="row">
-              <div class="col-md-6">
-                <h6>Modèle Conceptuel de Données (MCD)</h6>
-                <img src="https://via.placeholder.com/400x300?text=MCD+Bibliotheque" class="img-fluid mb-3">
-                <p>Entités principales :</p>
-                <ul>
-                  <li><strong>ADHERENT</strong> (id, nom, type, date_inscription, ...)</li>
-                  <li><strong>DOCUMENT</strong> (id, titre, auteur, date_publication, ...)</li>
-                  <li><strong>EXEMPLAIRE</strong> (id, id_document, code_barre, ...)</li>
-                  <li><strong>EMPRUNT</strong> (id, id_adherent, id_exemplaire, date_emprunt, date_retour_prevue, ...)</li>
-                  <li><strong>RESERVATION</strong> (id, id_adherent, id_document, date_reservation, ...)</li>
-                </ul>
-              </div>
-              <div class="col-md-6">
-                <h6>Modèle Logique de Données (MLD)</h6>
-                <pre>
-TABLE ADHERENT (
-  id INTEGER PRIMARY KEY,
+    case 'merise-mld':
+      title = 'Modèle Logique de Données (MLD)';
+      content = `
+        <p>Transformation du MCD en modèle adapté au type de base de données :</p>
+        <img src="https://via.placeholder.com/500x200?text=Exemple+MLD" class="img-fluid mb-3">
+        <h5>Étapes de transformation :</h5>
+        <ol>
+          <li><strong>Entités :</strong> Deviennent des tables avec clé primaire</li>
+          <li><strong>Associations :</strong> Deviennent des tables de liaison ou des clés étrangères</li>
+          <li><strong>Propriétés :</strong> Deviennent des colonnes</li>
+          <li><strong>Normalisation :</strong> Appliquer les formes normales (1FN, 2FN, 3FN)</li>
+        </ol>
+        <h5 class="mt-3">Exemple SQL :</h5>
+        <pre>
+CREATE TABLE CLIENT (
+  id_client INT PRIMARY KEY,
   nom VARCHAR(50),
   prenom VARCHAR(50),
-  type VARCHAR(20), -- 'ETUDIANT', 'PROFESSEUR', 'PERSONNEL'
+  email VARCHAR(100)
+);
+
+CREATE TABLE COMMANDE (
+  id_commande INT PRIMARY KEY,
+  date DATE,
+  montant DECIMAL(10,2),
+  id_client INT REFERENCES CLIENT(id_client)
+);
+        </pre>
+      `;
+      break;
+
+    // BPMN Details
+    case 'bpmn-intro':
+      title = 'Introduction à BPMN 2.0';
+      content = `
+        <p>BPMN (Business Process Model and Notation) est le standard pour la modélisation des processus métiers :</p>
+        <img src="https://via.placeholder.com/600x300?text=Exemple+Diagramme+BPMN" class="img-fluid mb-3">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Avantages :</h5>
+            <ul>
+              <li>Standard international (OMG)</li>
+              <li>Compréhensible par les métiers et les techniques</li>
+              <li>Permet d'aller jusqu'à l'exécution des processus</li>
+              <li>Large adoption dans l'industrie</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h5>Niveaux de modélisation :</h5>
+            <ol>
+              <li>Processus métier (Business Process)</li>
+              <li>Processus détaillé (Detailed Process)</li>
+              <li>Processus exécutable (Executable Process)</li>
+            </ol>
+          </div>
+        </div>
+      `;
+      break;
+
+    case 'bpmn-elements':
+      title = 'Éléments principaux de BPMN';
+      content = `
+        <p>Les éléments de base d'un diagramme BPMN :</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card mb-3">
+              <div class="card-header bg-bpmn text-white">
+                <h6>Événements</h6>
+              </div>
+              <div class="card-body">
+                <div style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--bpmn-green); margin: 0 auto;"></div>
+                <ul class="mt-2">
+                  <li>Début (Start)</li>
+                  <li>Intermediaire (Intermediate)</li>
+                  <li>Fin (End)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3">
+              <div class="card-header bg-bpmn text-white">
+                <h6>Activités</h6>
+              </div>
+              <div class="card-body">
+                <div style="width: 40px; height: 40px; border-radius: 10%; border: 2px solid var(--bpmn-green); margin: 0 auto;"></div>
+                <ul class="mt-2">
+                  <li>Tâche (Task)</li>
+                  <li>Sous-processus (Sub-process)</li>
+                  <li>Tâche utilisateur (User Task)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-3">
+              <div class="card-header bg-bpmn text-white">
+                <h6>Portes</h6>
+              </div>
+              <div class="card-body">
+                <div style="width: 40px; height: 40px; border: none; border-bottom: 2px solid var(--bpmn-green); margin: 0 auto;"></div>
+                <ul class="mt-2">
+                  <li>Exclusive (XOR)</li>
+                  <li>Parallèle (AND)</li>
+                  <li>Inclusive (OR)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="alert alert-info mt-3">
+          <p><strong>Conseil :</strong> Commencez par modéliser avec les éléments de base avant d'utiliser les éléments avancés.</p>
+        </div>
+      `;
+      break;
+
+    case 'bpmn-flux':
+      title = 'Flux et séquences en BPMN';
+      content = `
+        <p>Les différents types de flux dans un processus BPMN :</p>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Symbole</th>
+              <th>Description</th>
+              <th>Exemple</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Séquence</td>
+              <td>———▶</td>
+              <td>Ordre d'exécution</td>
+              <td>Validation → Approbation</td>
+            </tr>
+            <tr>
+              <td>Message</td>
+              <td>---○▶</td>
+              <td>Communication entre participants</td>
+              <td>Client → Système</td>
+            </tr>
+            <tr>
+              <td>Association</td>
+              <td>- - - -</td>
+              <td>Lien avec artéfacts</td>
+              <td>Tâche → Document</td>
+            </tr>
+            <tr>
+              <td>Conditionnel</td>
+              <td>───◸</td>
+              <td>Flux basé sur une condition</td>
+              <td>Montant > 1000€</td>
+            </tr>
+          </tbody>
+        </table>
+        <h5 class="mt-3">Règles des portes :</h5>
+        <ul>
+          <li><strong>Porte exclusive (XOR) :</strong> Un seul chemin est pris</li>
+          <li><strong>Porte parallèle (AND) :</strong> Tous les chemins sont pris</li>
+          <li><strong>Porte inclusive (OR) :</strong> Un ou plusieurs chemins sont pris</li>
+          <li><strong>Porte complexe :</strong> Combinaison personnalisée</li>
+        </ul>
+      `;
+      break;
+
+    default:
+      title = 'Détails non disponibles';
+      content = `
+        <div class="alert alert-warning">
+          <p>Les détails pour cette section ne sont pas encore disponibles.</p>
+          <p class="mb-0">Cette fonctionnalité est en cours de développement.</p>
+        </div>
+      `;
+  }
+
+  detailsModalTitle.textContent = title;
+  detailsModalContent.innerHTML = content;
+  detailsModal.show();
+}
+
+function showCaseStudy(caseId) {
+  let title = '';
+  let content = '';
+
+  switch(caseId) {
+    case 'bibliotheque':
+      title = 'Système de gestion de bibliothèque';
+      content = `
+        <h5>Contexte :</h5>
+        <p>Une bibliothèque universitaire souhaite moderniser son système de gestion avec les exigences suivantes :</p>
+        <ul>
+          <li>Gestion des membres (étudiants, professeurs, personnel) avec droits différents</li>
+          <li>Gestion d'un catalogue de 50 000 documents (livres, thèses, périodiques, DVD)</li>
+          <li>Système de prêt avec durées variables selon le type de document</li>
+          <li>Gestion des réservations et files d'attente</li>
+          <li>Calcul automatique des pénalités de retard</li>
+        </ul>
+
+        <h5 class="mt-4">Solution UML :</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Diagramme de classes</h6>
+            <img src="https://via.placeholder.com/400x300?text=Diagramme+Classes+Bibliotheque" class="img-fluid mb-3">
+            <p><strong>Principales classes :</strong></p>
+            <ul>
+              <li><strong>Utilisateur</strong> (abstraite) avec sous-classes Étudiant, Professeur</li>
+              <li><strong>Document</strong> (abstraite) avec sous-classes Livre, Thèse, Périodique</li>
+              <li><strong>Exemplaire</strong> pour gérer les copies physiques</li>
+              <li><strong>Emprunt</strong> avec associations vers Utilisateur et Exemplaire</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Diagramme de séquence - Emprunt</h6>
+            <img src="https://via.placeholder.com/400x200?text=Sequence+Emprunt" class="img-fluid mb-3">
+            <ol>
+              <li>Vérification du statut de l'utilisateur</li>
+              <li>Vérification de la disponibilité</li>
+              <li>Création de l'emprunt</li>
+              <li>Mise à jour du statut de l'exemplaire</li>
+            </ol>
+          </div>
+        </div>
+
+        <h5 class="mt-4">Solution Merise :</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Modèle Conceptuel de Données</h6>
+            <img src="https://via.placeholder.com/400x250?text=MCD+Bibliotheque" class="img-fluid mb-3">
+            <p><strong>Entités principales :</strong></p>
+            <ul>
+              <li><strong>ADHERENT</strong> (id, nom, type, date_inscription)</li>
+              <li><strong>DOCUMENT</strong> (id, titre, auteur, type)</li>
+              <li><strong>EXEMPLAIRE</strong> (id, id_document, code_barre)</li>
+              <li><strong>EMPRUNT</strong> (id, id_adherent, id_exemplaire, date_emprunt, date_retour)</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Modèle Logique de Données</h6>
+            <pre>
+CREATE TABLE ADHERENT (
+  id INT PRIMARY KEY,
+  nom VARCHAR(50),
+  prenom VARCHAR(50),
+  type VARCHAR(20) CHECK (type IN ('ETUDIANT', 'PROFESSEUR', 'PERSONNEL')),
   date_inscription DATE,
   ...
 );
 
-TABLE DOCUMENT (
-  id INTEGER PRIMARY KEY,
-  titre VARCHAR(100),
-  auteur VARCHAR(100),
-  type VARCHAR(20), -- 'LIVRE', 'THESE', 'PERIODIQUE', 'DVD'
+CREATE TABLE EMPRUNT (
+  id INT PRIMARY KEY,
+  id_adherent INT REFERENCES ADHERENT(id),
+  id_exemplaire INT REFERENCES EXEMPLAIRE(id),
+  date_emprunt DATE NOT NULL,
+  date_retour_prevue DATE NOT NULL,
+  date_retour_effectif DATE,
+  ...
+);
+            </pre>
+          </div>
+        </div>
+
+        <h5 class="mt-4">Processus BPMN :</h5>
+        <div class="row">
+          <div class="col-md-12">
+            <img src="https://via.placeholder.com/800x300?text=Processus+Gestion+Emprunts" class="img-fluid mb-3">
+            <p><strong>Étapes clés :</strong></p>
+            <ol>
+              <li>Présentation de la carte de membre</li>
+              <li>Vérification des droits (tâche système)</li>
+              <li>Scan du document (tâche utilisateur)</li>
+              <li>Validation du prêt (tâche système)</li>
+              <li>Impression du reçu (tâche système)</li>
+            </ol>
+          </div>
+        </div>
+      `;
+      break;
+
+    case 'ecommerce':
+      title = 'Plateforme e-commerce';
+      content = `
+        <h5>Contexte :</h5>
+        <p>Une entreprise souhaite développer une plateforme de vente en ligne avec :</p>
+        <ul>
+          <li>Catalogue de produits avec catégories et sous-catégories</li>
+          <li>Gestion des stocks en temps réel</li>
+          <li>Processus de commande en plusieurs étapes</li>
+          <li>Module de paiement sécurisé</li>
+          <li>Suivi des livraisons</li>
+        </ul>
+
+        <h5 class="mt-4">Solution UML :</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Diagramme de classes</h6>
+            <img src="https://via.placeholder.com/400x300?text=Diagramme+Classes+Ecommerce" class="img-fluid mb-3">
+            <p><strong>Classes principales :</strong></p>
+            <ul>
+              <li><strong>Utilisateur</strong> (Client, Admin)</li>
+              <li><strong>Produit</strong> avec héritage pour différents types</li>
+              <li><strong>Commande</strong> et <strong>LigneCommande</strong></li>
+              <li><strong>Paiement</strong> (abstraite) avec stratégies de paiement</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Diagramme d'activité - Commande</h6>
+            <img src="https://via.placeholder.com/400x250?text=Activite+Commande" class="img-fluid mb-3">
+            <p><strong>Flux principal :</strong></p>
+            <ol>
+              <li>Sélection des produits</li>
+              <li>Validation du panier</li>
+              <li>Saisie des informations de livraison</li>
+              <li>Choix du mode de paiement</li>
+              <li>Confirmation de commande</li>
+            </ol>
+          </div>
+        </div>
+
+        <h5 class="mt-4">Solution Merise :</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Modèle Conceptuel</h6>
+            <img src="https://via.placeholder.com/400x250?text=MCD+Ecommerce" class="img-fluid mb-3">
+            <p><strong>Entités clés :</strong></p>
+            <ul>
+              <li><strong>CLIENT</strong> (1,n) passe (0,n) <strong>COMMANDE</strong></li>
+              <li><strong>COMMANDE</strong> (1,n) contient (1,n) <strong>PRODUIT</strong></li>
+              <li><strong>PRODUIT</strong> (1,1) appartient à (0,n) <strong>CATEGORIE</strong></li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Contraintes métier</h6>
+            <div class="alert alert-info">
+              <p><strong>Règles de gestion :</strong></p>
+              <ul>
+                <li>Une commande doit avoir au moins une ligne de commande</li>
+                <li>Le stock ne peut pas être négatif</li>
+                <li>Une commande annulée doit être remboursée</li>
+                <li>Les produits peuvent appartenir à plusieurs catégories</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="mt-4">Processus BPMN :</h5>
+        <div class="row">
+          <div class="col-md-12">
+            <img src="https://via.placeholder.com/800x300?text=Processus+Traitement+Commande" class="img-fluid mb-3">
+            <p><strong>Pools et lanes :</strong></p>
+            <ul>
+              <li><strong>Client :</strong> Initie le processus</li>
+              <li><strong>Système :</strong> Traitement automatique</li>
+              <li><strong>Logistique :</strong> Préparation et expédition</li>
+            </ul>
+          </div>
+        </div>
+      `;
+      break;
+
+    case 'hopital':
+      title = 'Système de gestion hospitalière';
+      content = `
+        <h5>Contexte :</h5>
+        <p>Un hôpital souhaite numériser ses processus avec les besoins suivants :</p>
+        <ul>
+          <li>Gestion des dossiers patients</li>
+          <li>Prise de rendez-vous en ligne</li>
+          <li>Suivi des admissions et sorties</li>
+          <li>Gestion du personnel médical</li>
+          <li>Suivi des prescriptions</li>
+        </ul>
+
+        <h5 class="mt-4">Solution UML :</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Diagramme de classes</h6>
+            <img src="https://via.placeholder.com/400x300?text=Diagramme+Classes+Hopital" class="img-fluid mb-3">
+            <p><strong>Structure principale :</strong></p>
+            <ul>
+              <li><strong>Patient</strong> avec historique médical</li>
+              <li><strong>Personnel</strong> (Médecin, Infirmier) avec spécialités</li>
+              <li><strong>RendezVous</strong> avec statuts (planifié, annulé, terminé)</li>
+              <li><strong>Prescription</strong> liée à un traitement</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Diagramme d'états-transitions</h6>
+            <img src="https://via.placeholder.com/400x250?text=Etats+Patient" class="img-fluid mb-3">
+            <p><strong>Cycle de vie d'un patient :</strong></p>
+            <ol>
+              <li>Enregistrement</li>
+              <li>Consultation</li>
+              <li>Diagnostic</li>
+              <li>Traitement</li>
+              <li>Sortie</li>
+            </ol>
+          </div>
+        </div>
+
+        <h5 class="mt-4">Solution Merise :</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Modèle Conceptuel</h6>
+            <img src="https://via.placeholder.com/400x250?text=MCD+Hopital" class="img-fluid mb-3">
+            <p><strong>Relations clés :</strong></p>
+            <ul>
+              <li>Un <strong>PATIENT</strong> (1,n) a (1,n) <strong>CONSULTATION</strong></li>
+              <li>Un <strong>MEDECIN</strong> (1,n) effectue (1,n) <strong>CONSULTATION</strong></li>
+              <li>Une <strong>CONSULTATION</strong> (0,1) génère (1,n) <strong>PRESCRIPTION</strong></li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>MLD - Extrait</h6>
+            <pre>
+CREATE TABLE PATIENT (
+  id_patient INT PRIMARY KEY,
+  nom VARCHAR(50),
+  prenom VARCHAR(50),
+  date_naissance DATE,
+  groupe_sanguin VARCHAR(3),
   ...
 );
 
-TABLE EMPRUNT (
-  id INTEGER PRIMARY KEY,
-  id_adherent INTEGER REFERENCES ADHERENT(id),
-  id_exemplaire INTEGER REFERENCES EXEMPLAIRE(id),
-  date_emprunt DATE,
-  date_retour_prevue DATE,
+CREATE TABLE CONSULTATION (
+  id_consult INT PRIMARY KEY,
+  id_patient INT REFERENCES PATIENT(id_patient),
+  id_medecin INT REFERENCES PERSONNEL(id_personnel),
+  date_consult TIMESTAMP,
+  diagnostic TEXT,
   ...
 );
-                </pre>
-              </div>
-            </div>
-            
-            <h5 class="mt-4">Processus BPMN :</h5>
-            <div class="row">
-              <div class="col-md-12">
-                <img src="https://via.placeholder.com/800x300?text=Processus+Emprunt+BPMN" class="img-fluid mb-3">
-                <p>Processus d'emprunt :</p>
-                <ol>
-                  <li>Vérification de l'éligibilité de l'adhérent</li>
-                  <li>Vérification de la disponibilité du document</li>
-                  <li>Enregistrement de l'emprunt</li>
-                  <li>Mise à jour du statut de l'exemplaire</li>
-                  <li>Notification par email si nécessaire</li>
-                </ol>
-              </div>
-            </div>
-          `;
-          break;
-      }
+            </pre>
+          </div>
+        </div>
 
-      detailsModalTitle.textContent = title;
-      detailsModalContent.innerHTML = content;
-      detailsModal.show();
-    }
+        <h5 class="mt-4">Processus BPMN :</h5>
+        <div class="row">
+          <div class="col-md-12">
+            <img src="https://via.placeholder.com/800x300?text=Processus+Admission" class="img-fluid mb-3">
+            <p><strong>Processus d'admission :</strong></p>
+            <ol>
+              <li>Enregistrement administratif</li>
+              <li>Examen initial par l'infirmier</li>
+              <li>Diagnostic par le médecin</li>
+              <li>Décision d'hospitalisation</li>
+              <li>Affectation d'une chambre</li>
+            </ol>
+          </div>
+        </div>
+      `;
+      break;
+
+    case 'banque':
+      title = 'Système bancaire';
+      content = `
+        <h5>Contexte :</h5>
+        <p>Une banque souhaite moderniser son système avec :</p>
+        <ul>
+          <li>Gestion des clients et comptes</li>
+          <li>Suivi des opérations (virements, prélèvements)</li>
+          <li>Module de crédit avec calcul des échéances</li>
+          <li>Système de sécurité et audit</li>
+          <li>Conformité réglementaire</li>
+        </ul>
+
+        <h5 class="mt-4">Solution UML :</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Diagramme de classes</h6>
+            <img src="https://via.placeholder.com/400x300?text=Diagramme+Classes+Banque" class="img-fluid mb-3">
+            <p><strong>Structure principale :</strong></p>
+            <ul>
+              <li><strong>Client</strong> avec coordonnées et pièces d'identité</li>
+              <li><strong>Compte</strong> (abstraite) avec sous-classes Courant, Épargne</li>
+              <li><strong>Operation</strong> avec héritage pour différents types</li>
+              <li><strong>Credit</strong> avec plan d'amortissement</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Diagramme de cas d'utilisation</h6>
+            <img src="https://via.placeholder.com/400x250?text=Cas+Utilisation+Banque" class="img-fluid mb-3">
+            <p><strong>Acteurs principaux :</strong></p>
+            <ul>
+              <li>Client</li>
+              <li>Conseiller</li>
+              <li>Système externe (virements)</li>
+              <li>Administrateur</li>
+            </ul>
+          </div>
+        </div>
+
+        <h5 class="mt-4">Solution Merise :</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Modèle Conceptuel</h6>
+            <img src="https://via.placeholder.com/400x250?text=MCD+Banque" class="img-fluid mb-3">
+            <p><strong>Relations complexes :</strong></p>
+            <ul>
+              <li>Un <strong>CLIENT</strong> (1,n) détient (1,n) <strong>COMPTE</strong></li>
+              <li>Un <strong>COMPTE</strong> (1,n) a (1,n) <strong>OPERATION</strong></li>
+              <li>Un <strong>CLIENT</strong> (0,n) a (0,n) <strong>CREDIT</strong></li>
+              <li>Un <strong>CREDIT</strong> (1,1) a (1,n) <strong>ECHEANCE</strong></li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Contraintes métier</h6>
+            <div class="alert alert-info">
+              <p><strong>Règles strictes :</strong></p>
+              <ul>
+                <li>Un compte ne peut pas avoir un solde négatif non autorisé</li>
+                <li>Les opérations doivent être tracées (date, heure, agent)</li>
+                <li>Un crédit doit avoir un plan d'amortissement validé</li>
+                <li>Conformité aux réglementations bancaires</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="mt-4">Processus BPMN :</h5>
+        <div class="row">
+          <div class="col-md-12">
+            <img src="https://via.placeholder.com/800x300?text=Processus+Demande+Credit" class="img-fluid mb-3">
+            <p><strong>Processus de demande de crédit :</strong></p>
+            <ol>
+              <li>Saisie de la demande (client)</li>
+              <li>Vérification des pièces (conseiller)</li>
+              <li>Analyse de solvabilité (système)</li>
+              <li>Décision (comité)</li>
+              <li>Signature du contrat (client + conseiller)</li>
+            </ol>
+          </div>
+        </div>
+      `;
+      break;
+
+    default:
+      title = 'Cas pratique non trouvé';
+      content = `
+        <div class="alert alert-warning">
+          <p>Le cas pratique demandé n'est pas encore disponible dans notre base de données.</p>
+          <p class="mb-0">Nous travaillons à ajouter continuellement de nouveaux cas pratiques.</p>
+        </div>
+      `;
+  }
+
+  detailsModalTitle.textContent = title;
+  detailsModalContent.innerHTML = content;
+  detailsModal.show();
+}
 
     // Merise Simulation functions
     function simulateMeriseStep(step) {
@@ -1525,4 +1962,72 @@ TABLE EMPRUNT (
       }
 
       const element = document.createElement('div');
-      element.className = 'diagram
+      element.className = 'diagram-element';
+      element.style.left = '50px';
+      element.style.top = '50px';
+      
+      switch(type) {
+        case 'event':
+          element.style.width = '40px';
+          element.style.height = '40px';
+          element.style.borderRadius = '50%';
+          element.style.border = '2px solid var(--bpmn-green)';
+          element.style.display = 'flex';
+          element.style.alignItems = 'center';
+          element.style.justifyContent = 'center';
+          element.innerText = '⏱️';
+          break;
+        case 'activity':
+          element.style.width = '100px';
+          element.style.height = '60px';
+          element.style.borderRadius = '10%';
+          element.style.border = '2px solid var(--bpmn-green)';
+          element.style.display = 'flex';
+          element.style.alignItems = 'center';
+          element.style.justifyContent = 'center';
+          element.innerText = 'Activité';
+          break;
+      }
+      
+      element.addEventListener('dblclick', function() {
+        document.getElementById('bpmnElementProperties').style.display = 'block';
+        document.getElementById('bpmnElementName').value = element.innerText;
+        currentEditedBpmnElement = element;
+      });
+      
+      diagram.appendChild(element);
+      makeDraggable(element);
+    }
+
+    let currentEditedBpmnElement = null;
+
+    function updateBpmnElement() {
+      if (currentEditedBpmnElement) {
+        const name = document.getElementById('bpmnElementName').value;
+        const type = document.getElementById('bpmnElementType').value;
+        
+        currentEditedBpmnElement.innerText = name;
+        
+        // Update style based on type
+        if (type === 'start') {
+          currentEditedBpmnElement.style.backgroundColor = 'rgba(39, 174, 96, 0.2)';
+        } else if (type === 'end') {
+          currentEditedBpmnElement.style.backgroundColor = 'rgba(231, 76, 60, 0.2)';
+        }
+        
+        document.getElementById('bpmnElementProperties').style.display = 'none';
+      }
+    }
+
+    function validateBpmn() {
+      alert('Fonctionnalité de validation BPMN à implémenter');
+    }
+
+    function resetBpmnDiagram() {
+      const diagram = document.getElementById('bpmnDiagram');
+      diagram.innerHTML = '<div class="diagram-placeholder"><p>Glissez des éléments depuis la palette vers la zone de travail</p></div>';
+      document.getElementById('bpmnElementProperties').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

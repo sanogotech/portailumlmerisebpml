@@ -1,0 +1,1534 @@
+# Portail d'Apprentissage UML, Merise et BPMN
+
+Je vais créer un portail similaire à celui que vous avez partagé, mais dédié à UML, Merise et BPMN pour la formation des étudiants en informatique.
+
+## Structure de base HTML
+
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portail UML, Merise & BPMN</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --light-bg: #f8f9fa;
+      --dark-bg: #343a40;
+      --uml-purple: #8e44ad;
+      --merise-blue: #3498db;
+      --bpmn-green: #27ae60;
+    }
+
+    body {
+      background-color: var(--light-bg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+      background-color: var(--primary-color);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      color: white;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--uml-purple) 100%);
+      color: white;
+      padding: 4rem 0;
+      margin-bottom: 3rem;
+      border-radius: 0 0 20px 20px;
+    }
+
+    .card {
+      border: none;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: 600;
+    }
+
+    .uml-card .card-header {
+      background-color: var(--uml-purple);
+    }
+
+    .merise-card .card-header {
+      background-color: var(--merise-blue);
+    }
+
+    .bpmn-card .card-header {
+      background-color: var(--bpmn-green);
+    }
+
+    .module-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--secondary-color);
+    }
+
+    .btn-uml {
+      background-color: var(--uml-purple);
+      color: white;
+    }
+
+    .btn-uml:hover {
+      background-color: #7d3c98;
+      color: white;
+    }
+
+    .btn-merise {
+      background-color: var(--merise-blue);
+      color: white;
+    }
+
+    .btn-merise:hover {
+      background-color: #2980b9;
+      color: white;
+    }
+
+    .btn-bpmn {
+      background-color: var(--bpmn-green);
+      color: white;
+    }
+
+    .btn-bpmn:hover {
+      background-color: #219955;
+      color: white;
+    }
+
+    .simulation-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .process-step {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 20px;
+    }
+
+    .process-step:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      background-color: var(--uml-purple);
+      border-radius: 50%;
+    }
+
+    .process-step:after {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 20px;
+      width: 2px;
+      height: 100%;
+      background-color: var(--uml-purple);
+    }
+
+    .process-step:last-child:after {
+      display: none;
+    }
+
+    .highlight-box {
+      background-color: rgba(142, 68, 173, 0.1);
+      border-left: 4px solid var(--uml-purple);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .merise-highlight {
+      background-color: rgba(52, 152, 219, 0.1);
+      border-left: 4px solid var(--merise-blue);
+    }
+
+    .bpmn-highlight {
+      background-color: rgba(39, 174, 96, 0.1);
+      border-left: 4px solid var(--bpmn-green);
+    }
+
+    footer {
+      background-color: var(--dark-bg);
+      color: white;
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+
+    /* Animation pour les cartes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .module-card {
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    /* Délai d'animation pour chaque carte */
+    .module-card:nth-child(1) { animation-delay: 0.1s; }
+    .module-card:nth-child(2) { animation-delay: 0.2s; }
+    .module-card:nth-child(3) { animation-delay: 0.3s; }
+    .module-card:nth-child(4) { animation-delay: 0.4s; }
+    .module-card:nth-child(5) { animation-delay: 0.5s; }
+    .module-card:nth-child(6) { animation-delay: 0.6s; }
+    .module-card:nth-child(7) { animation-delay: 0.7s; }
+
+    /* Diagram styles */
+    .diagram-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      height: 400px;
+      position: relative;
+      overflow: auto;
+    }
+
+    .diagram-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #666;
+      font-style: italic;
+    }
+
+    .diagram-element {
+      position: absolute;
+      border: 2px solid #333;
+      padding: 5px;
+      cursor: move;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem 0;
+      }
+
+      .module-icon {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-diagram-3 me-2"></i>Portail UML, Merise & BPMN
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#uml">UML</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#merise">Merise</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#bpmn">BPMN</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#simulations">Simulations</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#cas-pratiques">Cas pratiques</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#ressources">Ressources</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#quiz">Quiz</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero-section">
+    <div class="container text-center">
+      <h1 class="display-4 fw-bold mb-3">Maîtrisez UML, Merise et BPMN</h1>
+      <p class="lead mb-4">Apprenez les langages de modélisation essentiels pour l'analyse et la conception des systèmes d'information</p>
+      <div class="d-flex justify-content-center gap-3">
+        <a href="#uml" class="btn btn-light btn-lg px-4">Commencer l'apprentissage</a>
+        <a href="#simulations" class="btn btn-outline-light btn-lg px-4">Essayer les simulations</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container mb-5">
+    <section class="mb-5">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h2 class="mb-4">Pourquoi apprendre UML, Merise et BPMN ?</h2>
+          <p class="lead">Ces langages de modélisation sont essentiels pour analyser, concevoir et documenter les systèmes d'information de manière rigoureuse et standardisée.</p>
+          <div class="d-flex justify-content-center mt-4">
+            <div class="px-4 text-center">
+              <i class="bi bi-diagram-2 fs-1" style="color: var(--uml-purple);"></i>
+              <p class="mt-2 fw-bold">Modélisation</p>
+            </div>
+            <div class="px-4 text-center">
+              <i class="bi bi-pc-display fs-1" style="color: var(--merise-blue);"></i>
+              <p class="mt-2 fw-bold">Conception</p>
+            </div>
+            <div class="px-4 text-center">
+              <i class="bi bi-gear fs-1" style="color: var(--bpmn-green);"></i>
+              <p class="mt-2 fw-bold">Processus</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="uml" class="mb-5">
+      <h2 class="text-center mb-4">UML (Unified Modeling Language)</h2>
+      
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card h-100 uml-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-journal-bookmark me-2"></i>
+              <h5 class="mb-0">Introduction à UML</h5>
+            </div>
+            <div class="card-body">
+              <p>UML est un langage de modélisation standardisé pour la conception orientée objet. Il offre 14 types de diagrammes répartis en 2 catégories :</p>
+              <div class="highlight-box">
+                <p><strong>Diagrammes structurels :</strong></p>
+                <ul>
+                  <li>Diagramme de classes</li>
+                  <li>Diagramme d'objets</li>
+                  <li>Diagramme de composants</li>
+                  <li>Diagramme de déploiement</li>
+                  <li>Diagramme de paquetages</li>
+                  <li>Diagramme de structure composite</li>
+                </ul>
+              </div>
+              <button class="btn btn-uml btn-sm mt-3" onclick="showDetails('uml-intro')">
+                <i class="bi bi-info-circle me-1"></i>Voir les diagrammes comportementaux
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card h-100 uml-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-diagram-3 me-2"></i>
+              <h5 class="mb-0">Diagramme de Classes</h5>
+            </div>
+            <div class="card-body">
+              <p>Le diagramme de classes est le plus utilisé en UML. Il représente :</p>
+              <ul>
+                <li>Les classes avec leurs attributs et méthodes</li>
+                <li>Les relations entre classes (héritage, association, etc.)</li>
+                <li>Les interfaces et les énumérations</li>
+              </ul>
+              <div class="diagram-container mt-3">
+                <div class="diagram-element" style="left: 50px; top: 50px; width: 120px; height: 80px; background-color: rgba(142, 68, 173, 0.2);">
+                  <div style="text-align: center; border-bottom: 1px solid black;">Client</div>
+                  <div>- id: int</div>
+                  <div>- nom: string</div>
+                  <div>+ acheter()</div>
+                </div>
+                <div class="diagram-element" style="left: 250px; top: 50px; width: 120px; height: 80px; background-color: rgba(142, 68, 173, 0.2);">
+                  <div style="text-align: center; border-bottom: 1px solid black;">Commande</div>
+                  <div>- id: int</div>
+                  <div>- date: Date</div>
+                  <div>+ valider()</div>
+                </div>
+                <div style="position: absolute; left: 170px; top: 90px; width: 80px; height: 2px; background-color: black;"></div>
+                <div style="position: absolute; left: 170px; top: 88px; width: 10px; height: 10px; transform: rotate(45deg); background-color: black;"></div>
+                <div style="position: absolute; left: 170px; top: 90px; text-align: center; width: 80px;">1..*</div>
+              </div>
+              <button class="btn btn-uml btn-sm mt-2" onclick="showDetails('uml-classes')">
+                <i class="bi bi-info-circle me-1"></i>Détails des relations
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card h-100 uml-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-arrow-repeat me-2"></i>
+              <h5 class="mb-0">Diagramme de Séquence</h5>
+            </div>
+            <div class="card-body">
+              <p>Montre les interactions entre objets dans le temps sous forme de messages.</p>
+              <p>Utile pour modéliser les cas d'utilisation et le comportement du système.</p>
+              <button class="btn btn-uml btn-sm mt-2" onclick="showDetails('uml-sequence')">
+                <i class="bi bi-info-circle me-1"></i>Voir un exemple
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card h-100 uml-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-activity me-2"></i>
+              <h5 class="mb-0">Diagramme d'Activité</h5>
+            </div>
+            <div class="card-body">
+              <p>Représente les flux de travail et les processus métier.</p>
+              <p>Similaire aux organigrammes mais avec une sémantique plus riche.</p>
+              <button class="btn btn-uml btn-sm mt-2" onclick="showDetails('uml-activite')">
+                <i class="bi bi-info-circle me-1"></i>Voir un exemple
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card h-100 uml-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-person me-2"></i>
+              <h5 class="mb-0">Diagramme de Cas d'Utilisation</h5>
+            </div>
+            <div class="card-body">
+              <p>Décrit les fonctionnalités du système du point de vue des utilisateurs.</p>
+              <p>Identifie les acteurs et leurs interactions avec le système.</p>
+              <button class="btn btn-uml btn-sm mt-2" onclick="showDetails('uml-cas-utilisation')">
+                <i class="bi bi-info-circle me-1"></i>Voir un exemple
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="merise" class="mb-5">
+      <h2 class="text-center mb-4">Méthode Merise</h2>
+      
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card h-100 merise-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-journal-bookmark me-2"></i>
+              <h5 class="mb-0">Concepts de base</h5>
+            </div>
+            <div class="card-body">
+              <p>Merise est une méthode de conception de systèmes d'information basée sur trois niveaux :</p>
+              <div class="merise-highlight highlight-box mt-3">
+                <p><strong>Niveaux d'abstraction :</strong></p>
+                <ol>
+                  <li><strong>Conceptuel :</strong> Modèle indépendant de toute technique</li>
+                  <li><strong>Logique :</strong> Adaptation au type de système</li>
+                  <li><strong>Physique :</strong> Implémentation concrète</li>
+                </ol>
+              </div>
+              <button class="btn btn-merise btn-sm mt-3" onclick="showDetails('merise-concepts')">
+                <i class="bi bi-info-circle me-1"></i>En savoir plus
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card h-100 merise-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-table me-2"></i>
+              <h5 class="mb-0">Modèle Conceptuel de Données (MCD)</h5>
+            </div>
+            <div class="card-body">
+              <p>Le MCD représente les données et leurs relations indépendamment de toute implémentation.</p>
+              <div class="diagram-container mt-3">
+                <div style="position: absolute; left: 50px; top: 50px; width: 100px; height: 60px; border: 2px solid var(--merise-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  CLIENT
+                </div>
+                <div style="position: absolute; left: 250px; top: 50px; width: 100px; height: 60px; border: 2px solid var(--merise-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                  COMMANDE
+                </div>
+                <div style="position: absolute; left: 150px; top: 80px; width: 100px; height: 2px; background-color: var(--merise-blue);"></div>
+                <div style="position: absolute; left: 150px; top: 70px; width: 20px; height: 20px; border-radius: 50%; background-color: var(--merise-blue);"></div>
+                <div style="position: absolute; left: 170px; top: 90px;">1,n</div>
+              </div>
+              <button class="btn btn-merise btn-sm mt-2" onclick="showDetails('merise-mcd')">
+                <i class="bi bi-info-circle me-1"></i>Détails du MCD
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card h-100 merise-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-arrow-left-right me-2"></i>
+              <h5 class="mb-0">Modèle Logique de Données (MLD)</h5>
+            </div>
+            <div class="card-body">
+              <p>Transformation du MCD en modèle adapté au type de base de données (relationnel, réseau, etc.).</p>
+              <p>Normalisation des tables et définition des clés.</p>
+              <button class="btn btn-merise btn-sm mt-2" onclick="showDetails('merise-mld')">
+                <i class="bi bi-info-circle me-1"></i>Voir un exemple
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card h-100 merise-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-hdd me-2"></i>
+              <h5 class="mb-0">Modèle Physique de Données (MPD)</h5>
+            </div>
+            <div class="card-body">
+              <p>Implémentation concrète dans un SGBD spécifique.</p>
+              <p>Définition des types de données, index, procédures stockées, etc.</p>
+              <button class="btn btn-merise btn-sm mt-2" onclick="showDetails('merise-mpd')">
+                <i class="bi bi-info-circle me-1"></i>Voir un exemple
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card h-100 merise-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-activity me-2"></i>
+              <h5 class="mb-0">Modèle Organisationnel des Traitements (MOT)</h5>
+            </div>
+            <div class="card-body">
+              <p>Décrit les processus métier et leur organisation.</p>
+              <p>Spécifie qui fait quoi, quand et comment.</p>
+              <button class="btn btn-merise btn-sm mt-2" onclick="showDetails('merise-mot')">
+                <i class="bi bi-info-circle me-1"></i>Voir un exemple
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="bpmn" class="mb-5">
+      <h2 class="text-center mb-4">BPMN (Business Process Model and Notation)</h2>
+      
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card h-100 bpmn-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-journal-bookmark me-2"></i>
+              <h5 class="mb-0">Introduction à BPMN</h5>
+            </div>
+            <div class="card-body">
+              <p>BPMN est le standard pour la modélisation des processus métiers. Il permet de :</p>
+              <div class="bpmn-highlight highlight-box">
+                <ul>
+                  <li>Documenter les processus existants</li>
+                  <li>Concevoir de nouveaux processus</li>
+                  <li>Faciliter la communication entre métiers et techniques</li>
+                  <li>Préparer l'automatisation des processus</li>
+                </ul>
+              </div>
+              <button class="btn btn-bpmn btn-sm mt-3" onclick="showDetails('bpmn-intro')">
+                <i class="bi bi-info-circle me-1"></i>Éléments de base
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card h-100 bpmn-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-diagram-3 me-2"></i>
+              <h5 class="mb-0">Éléments principaux</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4 text-center mb-3">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--bpmn-green); margin: 0 auto;"></div>
+                  <p class="fw-bold mt-2">Événements</p>
+                  <p>Déclencheurs et résultats</p>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                  <div style="width: 40px; height: 40px; border-radius: 10%; border: 2px solid var(--bpmn-green); margin: 0 auto;"></div>
+                  <p class="fw-bold mt-2">Activités</p>
+                  <p>Tâches et sous-processus</p>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                  <div style="width: 40px; height: 40px; border: none; border-bottom: 2px solid var(--bpmn-green); margin: 0 auto;"></div>
+                  <p class="fw-bold mt-2">Portes</p>
+                  <p>Décisions et synchronisations</p>
+                </div>
+              </div>
+              <button class="btn btn-bpmn btn-sm mt-2" onclick="showDetails('bpmn-elements')">
+                <i class="bi bi-info-circle me-1"></i>Tous les éléments
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card h-100 bpmn-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-arrow-right-circle me-2"></i>
+              <h5 class="mb-0">Séquences et Flux</h5>
+            </div>
+            <div class="card-body">
+              <p>Les flux montrent l'ordre des activités.</p>
+              <p>Différents types : séquentiels, parallèles, conditionnels.</p>
+              <button class="btn btn-bpmn btn-sm mt-2" onclick="showDetails('bpmn-flux')">
+                <i class="bi bi-info-circle me-1"></i>Voir les règles
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card h-100 bpmn-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-people me-2"></i>
+              <h5 class="mb-0">Pools et Lanes</h5>
+            </div>
+            <div class="card-body">
+              <p>Représentent les participants au processus.</p>
+              <p>Pools pour les organisations, lanes pour les rôles/départements.</p>
+              <button class="btn btn-bpmn btn-sm mt-2" onclick="showDetails('bpmn-pools')">
+                <i class="bi bi-info-circle me-1"></i>Voir un exemple
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card h-100 bpmn-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-envelope me-2"></i>
+              <h5 class="mb-0">Messages et Artéfacts</h5>
+            </div>
+            <div class="card-body">
+              <p>Communication entre processus et éléments supplémentaires.</p>
+              <p>Messages, données, annotations, groupes.</p>
+              <button class="btn btn-bpmn btn-sm mt-2" onclick="showDetails('bpmn-messages')">
+                <i class="bi bi-info-circle me-1"></i>En savoir plus
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="simulations" class="mb-5">
+      <h2 class="text-center mb-4">Simulations interactives</h2>
+
+      <ul class="nav nav-tabs justify-content-center mb-4" id="simulationTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="uml-sim-tab" data-bs-toggle="tab" data-bs-target="#uml-sim" type="button" role="tab">Modélisation UML</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="merise-sim-tab" data-bs-toggle="tab" data-bs-target="#merise-sim" type="button" role="tab">Conception Merise</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="bpmn-sim-tab" data-bs-toggle="tab" data-bs-target="#bpmn-sim" type="button" role="tab">Processus BPMN</button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="simulationTabContent">
+        <div class="tab-pane fade show active" id="uml-sim" role="tabpanel">
+          <div class="simulation-container">
+            <h3 class="mb-4"><i class="bi bi-diagram-3 me-2"></i>Création d'un diagramme de classes</h3>
+            <p>Cette simulation vous permet de créer un diagramme de classes UML pour un système de gestion de bibliothèque.</p>
+            
+            <div class="diagram-container" id="umlDiagram">
+              <div class="diagram-placeholder">
+                <p>Glissez des éléments depuis la palette vers la zone de travail</p>
+              </div>
+            </div>
+            
+            <div class="row mt-3">
+              <div class="col-md-3">
+                <h5>Palette d'éléments</h5>
+                <div class="list-group">
+                  <button class="list-group-item list-group-item-action" onclick="addUmlElement('class')">
+                    <i class="bi bi-square"></i> Classe
+                  </button>
+                  <button class="list-group-item list-group-item-action" onclick="addUmlElement('interface')">
+                    <i class="bi bi-square"></i> Interface
+                  </button>
+                  <button class="list-group-item list-group-item-action" onclick="addUmlElement('inheritance')">
+                    <i class="bi bi-arrow-up"></i> Héritage
+                  </button>
+                  <button class="list-group-item list-group-item-action" onclick="addUmlElement('association')">
+                    <i class="bi bi-arrow-left-right"></i> Association
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div id="elementProperties" style="display: none;">
+                  <h5>Propriétés de l'élément</h5>
+                  <div class="mb-3">
+                    <label class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="elementName">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Attributs</label>
+                    <textarea class="form-control" id="elementAttributes" rows="2"></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Méthodes</label>
+                    <textarea class="form-control" id="elementMethods" rows="2"></textarea>
+                  </div>
+                  <button class="btn btn-primary btn-sm" onclick="updateElement()">Appliquer</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <button class="btn btn-uml me-2" onclick="generateUmlCode()">
+                <i class="bi bi-code me-1"></i>Générer le code
+              </button>
+              <button class="btn btn-outline-primary" onclick="resetUmlDiagram()">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>Réinitialiser
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="merise-sim" role="tabpanel">
+          <div class="simulation-container">
+            <h3 class="mb-4"><i class="bi bi-table me-2"></i>Création d'un MCD Merise</h3>
+            <p>Cette simulation vous guide dans la création d'un modèle conceptuel de données pour un système de gestion de commandes.</p>
+
+            <div class="process-step">
+              <h5>1. Identifier les entités</h5>
+              <div class="mb-3">
+                <button class="btn btn-sm btn-outline-primary" onclick="simulateMeriseStep('identifyEntities')">Simuler cette étape</button>
+                <div id="identifyEntitiesResult" class="mt-3" style="display:none;">
+                  <div class="alert alert-success">
+                    <p>Les entités principales identifiées :</p>
+                    <ul>
+                      <li>CLIENT</li>
+                      <li>COMMANDE</li>
+                      <li>PRODUIT</li>
+                      <li>LIVRAISON</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="process-step">
+              <h5>2. Définir les associations</h5>
+              <div class="mb-3">
+                <button class="btn btn-sm btn-outline-primary" id="defineAssociationsBtn" disabled onclick="simulateMeriseStep('defineAssociations')">Simuler cette étape</button>
+                <div id="defineAssociationsResult" style="display:none;">
+                  <div class="alert alert-success">
+                    <p>Associations identifiées :</p>
+                    <ul>
+                      <li>Un CLIENT passe une ou plusieurs COMMANDES (1,n)</li>
+                      <li>Une COMMANDE concerne un ou plusieurs PRODUITS (1,n)</li>
+                      <li>Une COMMANDE génère une LIVRAISON (1,1)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="process-step">
+              <h5>3. Ajouter les attributs</h5>
+              <div class="mb-3">
+                <button class="btn btn-sm btn-outline-primary" id="addAttributesBtn" disabled onclick="simulateMeriseStep('addAttributes')">Simuler cette étape</button>
+                <div id="addAttributesResult" style="display:none;">
+                  <div class="alert alert-success">
+                    <p>Attributs principaux :</p>
+                    <table class="table table-sm">
+                      <thead>
+                        <tr><th>Entité</th><th>Attributs</th><th>Identifiant</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>CLIENT</td>
+                          <td>id_client, nom, prénom, adresse</td>
+                          <td>id_client</td>
+                        </tr>
+                        <tr>
+                          <td>COMMANDE</td>
+                          <td>num_commande, date, montant</td>
+                          <td>num_commande</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="process-step">
+              <h5>4. Vérifier les règles de gestion</h5>
+              <div class="mb-3">
+                <button class="btn btn-sm btn-outline-primary" id="verifyRulesBtn" disabled onclick="simulateMeriseStep('verifyRules')">Simuler cette étape</button>
+                <div id="verifyRulesResult" style="display:none;">
+                  <div class="alert alert-success">
+                    <p>Règles de gestion validées :</p>
+                    <ul>
+                      <li>Un client peut avoir plusieurs adresses ? → Nouvelle entité ADRESSE</li>
+                      <li>Un produit peut être commandé sans stock ? → Ajout attribut "disponible"</li>
+                      <li>Une commande peut être annulée ? → Ajout attribut "statut"</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <button class="btn btn-primary" onclick="resetMeriseSimulation()">Réinitialiser la simulation</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="bpmn-sim" role="tabpanel">
+          <div class="simulation-container">
+            <h3 class="mb-4"><i class="bi bi-diagram-3 me-2"></i>Modélisation d'un processus BPMN</h3>
+            <p>Cette simulation vous permet de créer un diagramme BPMN pour un processus de traitement de commande.</p>
+
+            <div class="diagram-container" id="bpmnDiagram">
+              <div class="diagram-placeholder">
+                <p>Glissez des éléments depuis la palette vers la zone de travail</p>
+              </div>
+            </div>
+            
+            <div class="row mt-3">
+              <div class="col-md-3">
+                <h5>Éléments BPMN</h5>
+                <div class="list-group">
+                  <button class="list-group-item list-group-item-action" onclick="addBpmnElement('event')">
+                    <div style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--bpmn-green); display: inline-block;"></div> Événement
+                  </button>
+                  <button class="list-group-item list-group-item-action" onclick="addBpmnElement('activity')">
+                    <div style="width: 20px; height: 20px; border-radius: 10%; border: 2px solid var(--bpmn-green); display: inline-block;"></div> Activité
+                  </button>
+                  <button class="list-group-item list-group-item-action" onclick="addBpmnElement('gateway')">
+                    <div style="width: 20px; height: 20px; border: none; border-bottom: 2px solid var(--bpmn-green); display: inline-block;"></div> Porte
+                  </button>
+                  <button class="list-group-item list-group-item-action" onclick="addBpmnElement('sequence')">
+                    <div style="width: 20px; height: 20px; border: none; border-bottom: 2px solid var(--bpmn-green); display: inline-block; transform: rotate(90deg);"></div> Flux
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div id="bpmnElementProperties" style="display: none;">
+                  <h5>Propriétés de l'élément</h5>
+                  <div class="mb-3">
+                    <label class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="bpmnElementName">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Type</label>
+                    <select class="form-select" id="bpmnElementType">
+                      <option value="start">Événement de début</option>
+                      <option value="end">Événement de fin</option>
+                      <option value="task">Tâche</option>
+                      <option value="subprocess">Sous-processus</option>
+                      <option value="exclusive">Porte exclusive (XOR)</option>
+                      <option value="parallel">Porte parallèle (AND)</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-primary btn-sm" onclick="updateBpmnElement()">Appliquer</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <button class="btn btn-bpmn me-2" onclick="validateBpmn()">
+                <i class="bi bi-check-circle me-1"></i>Valider le processus
+              </button>
+              <button class="btn btn-outline-primary" onclick="resetBpmnDiagram()">
+                <i class="bi bi-arrow-counterclockwise me-1"></i>Réinitialiser
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cas-pratiques" class="mb-5">
+      <h2 class="text-center mb-4">Cas pratiques</h2>
+      
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+          <div class="card h-100 uml-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-book me-2"></i>
+              <h5 class="mb-0">Système de bibliothèque</h5>
+            </div>
+            <div class="card-body">
+              <p>Modélisation UML et Merise d'un système de gestion de bibliothèque universitaire.</p>
+              <p><strong>Défis :</strong> Gestion des emprunts, réservations, retours, pénalités.</p>
+              <button class="btn btn-uml btn-sm mt-2" onclick="showCaseStudy('bibliotheque')">
+                <i class="bi bi-journal-text me-1"></i>Voir la solution
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col">
+          <div class="card h-100 merise-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-cart me-2"></i>
+              <h5 class="mb-0">Site e-commerce</h5>
+            </div>
+            <div class="card-body">
+              <p>Conception Merise et BPMN pour un site de vente en ligne.</p>
+              <p><strong>Défis :</strong> Gestion des commandes, paiements, livraisons, retours.</p>
+              <button class="btn btn-merise btn-sm mt-2" onclick="showCaseStudy('ecommerce')">
+                <i class="bi bi-journal-text me-1"></i>Voir la solution
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col">
+          <div class="card h-100 bpmn-card">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-hospital me-2"></i>
+              <h5 class="mb-0">Gestion hospitalière</h5>
+            </div>
+            <div class="card-body">
+              <p>Modélisation des processus d'admission et de soins dans un hôpital.</p>
+              <p><strong>Défis :</strong> Coordination entre services, gestion des urgences.</p>
+              <button class="btn btn-bpmn btn-sm mt-2" onclick="showCaseStudy('hopital')">
+                <i class="bi bi-journal-text me-1"></i>Voir la solution
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-header d-flex align-items-center">
+              <i class="bi bi-bank me-2"></i>
+              <h5 class="mb-0">Système bancaire</h5>
+            </div>
+            <div class="card-body">
+              <p>Modélisation complète d'un système de gestion de comptes bancaires.</p>
+              <p><strong>Défis :</strong> Sécurité, audit, conformité réglementaire.</p>
+              <button class="btn btn-primary btn-sm mt-2" onclick="showCaseStudy('banque')">
+                <i class="bi bi-journal-text me-1"></i>Voir la solution
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ressources" class="mb-5">
+      <h2 class="text-center mb-4">Ressources supplémentaires</h2>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">Livres recommandés</h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">"UML 2.0 - Initiation, exemples et exercices corrigés" - Laurent Audibert</li>
+                <li class="list-group-item">"Merise - Conception de systèmes d'information" - Jean-Luc Hainaut</li>
+                <li class="list-group-item">"BPMN 2.0 - Modélisation et mise en œuvre" - Laure Chèze</li>
+                <li class="list-group-item">"Analyse et conception orientées objet" - Craig Larman</li>
+                <li class="list-group-item">"UML Distilled" - Martin Fowler</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">Outils de modélisation</h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Enterprise Architect</li>
+                <li class="list-group-item">Visual Paradigm</li>
+                <li class="list-group-item">Lucidchart</li>
+                <li class="list-group-item">draw.io</li>
+                <li class="list-group-item">StarUML</li>
+                <li class="list-group-item">Camunda Modeler (BPMN)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Formations et certifications</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <h6>UML</h6>
+              <ul>
+                <li>Certification OMG UML</li>
+                <li>Formations UML avancé</li>
+                <li>Cours en ligne (Coursera, Udemy)</li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <h6>Merise</h6>
+              <ul>
+                <li>Formations en modélisation de données</li>
+                <li>Cours universitaires</li>
+                <li>Ateliers pratiques</li>
+              </ul>
+            </div>
+            <div class="col-md-4">
+              <h6>BPMN</h6>
+              <ul>
+                <li>Certification OMG BPMN</li>
+                <li>Formations Camunda</li>
+                <li>Ateliers de modélisation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" class="mb-5">
+      <h2 class="text-center mb-4">Quiz d'évaluation</h2>
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Testez vos connaissances</h5>
+        </div>
+        <div class="card-body">
+          <p>Évaluez votre maîtrise des concepts UML, Merise et BPMN avec notre quiz interactif.</p>
+          <div class="d-grid gap-2">
+            <a href="quiz-uml-merise-bpmn.html" class="btn btn-primary">
+              <i class="bi bi-question-circle me-1"></i>Commencer le quiz
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="container text-center">
+      <p class="mb-0">Portail UML, Merise & BPMN - Outil pédagogique</p>
+      <p class="mb-0">© 2023 - Tous droits réservés</p>
+    </div>
+  </footer>
+
+  <!-- Modal for details -->
+  <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detailsModalLabel">Détails</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="detailsModalContent">
+          Chargement...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Simulation states
+    let meriseSimulationState = {
+      identifyEntities: false,
+      defineAssociations: false,
+      addAttributes: false,
+      verifyRules: false
+    };
+
+    // DOM elements
+    const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+    const detailsModalTitle = document.getElementById('detailsModalLabel');
+    const detailsModalContent = document.getElementById('detailsModalContent');
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Setup any initial functionality
+    });
+
+    // Show details in modal
+    function showDetails(type) {
+      let title = '';
+      let content = '';
+
+      switch(type) {
+        case 'uml-intro':
+          title = 'Diagrammes comportementaux en UML';
+          content = `
+            <p>Les diagrammes comportementaux en UML décrivent les interactions et les dynamiques du système :</p>
+            <ol>
+              <li><strong>Diagramme de séquence :</strong> Interactions temporelles entre objets</li>
+              <li><strong>Diagramme de cas d'utilisation :</strong> Fonctionnalités du système</li>
+              <li><strong>Diagramme d'activité :</strong> Flux de processus métier</li>
+              <li><strong>Diagramme d'états-transitions :</strong> Comportement des objets</li>
+              <li><strong>Diagramme de communication :</strong> Interactions entre objets (alternative au séquence)</li>
+              <li><strong>Diagramme de temps :</strong> Contraintes temporelles</li>
+              <li><strong>Diagramme global d'interactions :</strong> Vue d'ensemble des interactions</li>
+            </ol>
+          `;
+          break;
+        case 'uml-classes':
+          title = 'Relations entre classes en UML';
+          content = `
+            <p>Les principales relations entre classes en UML :</p>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Relation</th>
+                  <th>Symbole</th>
+                  <th>Description</th>
+                  <th>Exemple</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Association</td>
+                  <td>———</td>
+                  <td>Lien sémantique entre classes</td>
+                  <td>Client — Commande</td>
+                </tr>
+                <tr>
+                  <td>Agrégation</td>
+                  <td>———◇</td>
+                  <td>Relation "partie de" (faible)</td>
+                  <td>Voiture ◇— Roue</td>
+                </tr>
+                <tr>
+                  <td>Composition</td>
+                  <td>———◆</td>
+                  <td>Relation "partie de" (forte)</td>
+                  <td>Maison ◆— Pièce</td>
+                </tr>
+                <tr>
+                  <td>Héritage</td>
+                  <td>———▷</td>
+                  <td>Relation "est un"</td>
+                  <td>Animal ▷ Chien</td>
+                </tr>
+                <tr>
+                  <td>Dépendance</td>
+                  <td>- - - ▷</td>
+                  <td>Utilisation temporaire</td>
+                  <td>Facture - - ▷ Produit</td>
+                </tr>
+              </tbody>
+            </table>
+          `;
+          break;
+        case 'merise-concepts':
+          title = 'Méthode Merise en détail';
+          content = `
+            <p>La méthode Merise repose sur plusieurs concepts clés :</p>
+            <div class="row">
+              <div class="col-md-6">
+                <h5>Cycles de vie</h5>
+                <ol>
+                  <li><strong>Cycle d'abstraction :</strong> Conceptuel → Logique → Physique</li>
+                  <li><strong>Cycle de décision :</strong> Stratégique → Organisationnel → Opérationnel</li>
+                  <li><strong>Cycle de réalisation :</strong> Étude → Conception → Réalisation → Exploitation</li>
+                </ol>
+              </div>
+              <div class="col-md-6">
+                <h5>Principes fondamentaux</h5>
+                <ul>
+                  <li>Séparation données/traitements</li>
+                  <li>Approche systémique</li>
+                  <li>Modélisation progressive</li>
+                  <li>Validation à chaque étape</li>
+                </ul>
+              </div>
+            </div>
+            <div class="alert alert-info mt-3">
+              <p>Merise est particulièrement adaptée pour les projets complexes nécessitant une modélisation rigoureuse des données.</p>
+            </div>
+          `;
+          break;
+        case 'bibliotheque':
+          title = 'Cas pratique : Système de bibliothèque';
+          content = `
+            <h5>Contexte :</h5>
+            <p>Une bibliothèque universitaire souhaite moderniser son système de gestion des prêts. Les besoins principaux sont :</p>
+            <ul>
+              <li>Gestion des adhérents (étudiants, professeurs)</li>
+              <li>Gestion des documents (livres, thèses, périodiques)</li>
+              <li>Gestion des emprunts et retours</li>
+              <li>Gestion des réservations</li>
+              <li>Calcul des pénalités de retard</li>
+            </ul>
+            
+            <h5 class="mt-4">Solution UML :</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Diagramme de classes</h6>
+                <ul>
+                  <li>Classe <strong>Adhérent</strong> avec sous-classes Étudiant et Professeur</li>
+                  <li>Classe <strong>Document</strong> avec sous-classes Livre, Thèse, Périodique</li>
+                  <li>Classe <strong>Emprunt</strong> en association avec Adhérent et Document</li>
+                  <li>Classe <strong>Réservation</strong> pour gérer les files d'attente</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6>Diagramme de cas d'utilisation</h6>
+                <ul>
+                  <li>Acteurs : Adhérent, Bibliothécaire, Système de paiement</li>
+                  <li>Cas d'utilisation : Emprunter, Prolonger, Réserver, Payer amende</li>
+                </ul>
+              </div>
+            </div>
+            
+            <h5 class="mt-4">Solution Merise :</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <h6>MCD</h6>
+                <ul>
+                  <li>Entités : ADHERENT, DOCUMENT, EMPRUNT, RESERVATION</li>
+                  <li>Associations : PASSER (ADHERENT-EMPRUNT), CONCERNER (EMPRUNT-DOCUMENT)</li>
+                  <li>Cardinalités : Un adhérent peut passer plusieurs emprunts (1,n)</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6>MLD</h6>
+                <ul>
+                  <li>Tables : ADHERENT(id, nom, type, ...), DOCUMENT(id, titre, type, ...)</li>
+                  <li>Table de liaison EMPRUNT(id, id_adherent, id_document, date_emprunt, ...)</li>
+                  <li>Clés étrangères pour gérer les relations</li>
+                </ul>
+              </div>
+            </div>
+          `;
+          break;
+      }
+
+      detailsModalTitle.textContent = title;
+      detailsModalContent.innerHTML = content;
+      detailsModal.show();
+    }
+
+    function showCaseStudy(caseId) {
+      let title = '';
+      let content = '';
+
+      switch(caseId) {
+        case 'bibliotheque':
+          title = 'Cas pratique complet : Système de bibliothèque';
+          content = `
+            <h5>Contexte :</h5>
+            <p>Une grande bibliothèque universitaire souhaite moderniser son système de gestion des prêts. Les besoins fonctionnels sont :</p>
+            <ul>
+              <li>Gestion des adhérents (étudiants, professeurs, personnel) avec différents droits</li>
+              <li>Gestion d'un catalogue de documents divers (livres, thèses, périodiques, DVD)</li>
+              <li>Gestion des emprunts avec durée variable selon le type de document et d'adhérent</li>
+              <li>Système de réservation avec file d'attente</li>
+              <li>Calcul automatique des pénalités de retard</li>
+              <li>Gestion des acquisitions et du désherbage</li>
+            </ul>
+            
+            <h5 class="mt-4">Analyse UML :</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Diagramme de classes</h6>
+                <img src="https://via.placeholder.com/400x300?text=Diagramme+de+classes" class="img-fluid mb-3">
+                <p>Principales classes :</p>
+                <ul>
+                  <li><strong>Utilisateur</strong> (classe abstraite) avec sous-classes Étudiant, Professeur, Bibliothécaire</li>
+                  <li><strong>Document</strong> (classe abstraite) avec sous-classes Livre, Thèse, Périodique, DVD</li>
+                  <li><strong>Emprunt</strong> avec associations vers Utilisateur et Document</li>
+                  <li><strong>Réservation</strong> pour gérer les files d'attente</li>
+                  <li><strong>Exemplaire</strong> pour gérer les copies physiques</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6>Diagramme de cas d'utilisation</h6>
+                <img src="https://via.placeholder.com/400x200?text=Cas+d'utilisation" class="img-fluid mb-3">
+                <p>Principaux cas :</p>
+                <ul>
+                  <li><strong>Emprunter un document</strong> (avec vérification des droits)</li>
+                  <li><strong>Prolonger un emprunt</strong> (si pas de réservation)</li>
+                  <li><strong>Réserver un document</strong> indisponible</li>
+                  <li><strong>Gérer les pénalités</strong> de retard</li>
+                  <li><strong>Gérer le catalogue</strong> (ajout, suppression, modification)</li>
+                </ul>
+              </div>
+            </div>
+            
+            <h5 class="mt-4">Conception Merise :</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Modèle Conceptuel de Données (MCD)</h6>
+                <img src="https://via.placeholder.com/400x300?text=MCD+Bibliotheque" class="img-fluid mb-3">
+                <p>Entités principales :</p>
+                <ul>
+                  <li><strong>ADHERENT</strong> (id, nom, type, date_inscription, ...)</li>
+                  <li><strong>DOCUMENT</strong> (id, titre, auteur, date_publication, ...)</li>
+                  <li><strong>EXEMPLAIRE</strong> (id, id_document, code_barre, ...)</li>
+                  <li><strong>EMPRUNT</strong> (id, id_adherent, id_exemplaire, date_emprunt, date_retour_prevue, ...)</li>
+                  <li><strong>RESERVATION</strong> (id, id_adherent, id_document, date_reservation, ...)</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6>Modèle Logique de Données (MLD)</h6>
+                <pre>
+TABLE ADHERENT (
+  id INTEGER PRIMARY KEY,
+  nom VARCHAR(50),
+  prenom VARCHAR(50),
+  type VARCHAR(20), -- 'ETUDIANT', 'PROFESSEUR', 'PERSONNEL'
+  date_inscription DATE,
+  ...
+);
+
+TABLE DOCUMENT (
+  id INTEGER PRIMARY KEY,
+  titre VARCHAR(100),
+  auteur VARCHAR(100),
+  type VARCHAR(20), -- 'LIVRE', 'THESE', 'PERIODIQUE', 'DVD'
+  ...
+);
+
+TABLE EMPRUNT (
+  id INTEGER PRIMARY KEY,
+  id_adherent INTEGER REFERENCES ADHERENT(id),
+  id_exemplaire INTEGER REFERENCES EXEMPLAIRE(id),
+  date_emprunt DATE,
+  date_retour_prevue DATE,
+  ...
+);
+                </pre>
+              </div>
+            </div>
+            
+            <h5 class="mt-4">Processus BPMN :</h5>
+            <div class="row">
+              <div class="col-md-12">
+                <img src="https://via.placeholder.com/800x300?text=Processus+Emprunt+BPMN" class="img-fluid mb-3">
+                <p>Processus d'emprunt :</p>
+                <ol>
+                  <li>Vérification de l'éligibilité de l'adhérent</li>
+                  <li>Vérification de la disponibilité du document</li>
+                  <li>Enregistrement de l'emprunt</li>
+                  <li>Mise à jour du statut de l'exemplaire</li>
+                  <li>Notification par email si nécessaire</li>
+                </ol>
+              </div>
+            </div>
+          `;
+          break;
+      }
+
+      detailsModalTitle.textContent = title;
+      detailsModalContent.innerHTML = content;
+      detailsModal.show();
+    }
+
+    // Merise Simulation functions
+    function simulateMeriseStep(step) {
+      switch (step) {
+        case 'identifyEntities':
+          document.getElementById('identifyEntitiesResult').style.display = 'block';
+          meriseSimulationState.identifyEntities = true;
+          document.getElementById('defineAssociationsBtn').disabled = false;
+          break;
+        case 'defineAssociations':
+          document.getElementById('defineAssociationsResult').style.display = 'block';
+          meriseSimulationState.defineAssociations = true;
+          document.getElementById('defineAssociationsBtn').disabled = true;
+          document.getElementById('addAttributesBtn').disabled = false;
+          break;
+        case 'addAttributes':
+          document.getElementById('addAttributesResult').style.display = 'block';
+          meriseSimulationState.addAttributes = true;
+          document.getElementById('addAttributesBtn').disabled = true;
+          document.getElementById('verifyRulesBtn').disabled = false;
+          break;
+        case 'verifyRules':
+          document.getElementById('verifyRulesResult').style.display = 'block';
+          meriseSimulationState.verifyRules = true;
+          document.getElementById('verifyRulesBtn').disabled = true;
+          break;
+      }
+    }
+
+    function resetMeriseSimulation() {
+      meriseSimulationState = {
+        identifyEntities: false,
+        defineAssociations: false,
+        addAttributes: false,
+        verifyRules: false
+      };
+
+      document.getElementById('identifyEntitiesResult').style.display = 'none';
+      document.getElementById('defineAssociationsResult').style.display = 'none';
+      document.getElementById('addAttributesResult').style.display = 'none';
+      document.getElementById('verifyRulesResult').style.display = 'none';
+
+      document.getElementById('defineAssociationsBtn').disabled = true;
+      document.getElementById('addAttributesBtn').disabled = true;
+      document.getElementById('verifyRulesBtn').disabled = true;
+    }
+
+    // UML Diagram functions
+    function addUmlElement(type) {
+      const diagram = document.getElementById('umlDiagram');
+      const placeholder = diagram.querySelector('.diagram-placeholder');
+      if (placeholder) {
+        placeholder.style.display = 'none';
+      }
+
+      const element = document.createElement('div');
+      element.className = 'diagram-element';
+      element.style.left = '50px';
+      element.style.top = '50px';
+      
+      switch(type) {
+        case 'class':
+          element.innerHTML = `
+            <div style="text-align: center; border-bottom: 1px solid black;">NouvelleClasse</div>
+            <div>- attribut: type</div>
+            <div>+ methode()</div>
+          `;
+          element.style.width = '150px';
+          element.style.height = '100px';
+          element.style.backgroundColor = 'rgba(142, 68, 173, 0.2)';
+          break;
+        case 'interface':
+          element.innerHTML = `
+            <div style="text-align: center; border-bottom: 1px solid black; font-style: italic;"><<interface>></div>
+            <div style="text-align: center;">INouvelleInterface</div>
+            <div>+ methode()</div>
+          `;
+          element.style.width = '150px';
+          element.style.height = '80px';
+          element.style.backgroundColor = 'rgba(142, 68, 173, 0.2)';
+          break;
+      }
+      
+      element.addEventListener('dblclick', function() {
+        document.getElementById('elementProperties').style.display = 'block';
+        document.getElementById('elementName').value = type === 'class' ? 'NouvelleClasse' : 'INouvelleInterface';
+        document.getElementById('elementAttributes').value = type === 'class' ? '- attribut: type' : '';
+        document.getElementById('elementMethods').value = '+ methode()';
+        currentEditedElement = element;
+      });
+      
+      diagram.appendChild(element);
+      makeDraggable(element);
+    }
+
+    let currentEditedElement = null;
+
+    function makeDraggable(element) {
+      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      
+      element.onmousedown = dragMouseDown;
+      
+      function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+      }
+      
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // set the element's new position:
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+      }
+      
+      function closeDragElement() {
+        // stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
+
+    function updateElement() {
+      if (currentEditedElement) {
+        const name = document.getElementById('elementName').value;
+        const attributes = document.getElementById('elementAttributes').value;
+        const methods = document.getElementById('elementMethods').value;
+        
+        let content = `<div style="text-align: center; border-bottom: 1px solid black;">${name}</div>`;
+        if (attributes) {
+          content += `<div>${attributes.split('\n').join('</div><div>')}</div>`;
+        }
+        if (methods) {
+          content += `<div>${methods.split('\n').join('</div><div>')}</div>`;
+        }
+        
+        currentEditedElement.innerHTML = content;
+        document.getElementById('elementProperties').style.display = 'none';
+      }
+    }
+
+    function generateUmlCode() {
+      alert('Fonctionnalité de génération de code à implémenter');
+    }
+
+    function resetUmlDiagram() {
+      const diagram = document.getElementById('umlDiagram');
+      diagram.innerHTML = '<div class="diagram-placeholder"><p>Glissez des éléments depuis la palette vers la zone de travail</p></div>';
+      document.getElementById('elementProperties').style.display = 'none';
+    }
+
+    // BPMN Diagram functions
+    function addBpmnElement(type) {
+      const diagram = document.getElementById('bpmnDiagram');
+      const placeholder = diagram.querySelector('.diagram-placeholder');
+      if (placeholder) {
+        placeholder.style.display = 'none';
+      }
+
+      const element = document.createElement('div');
+      element.className = 'diagram

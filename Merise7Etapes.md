@@ -1,6 +1,6 @@
 # 🏗️ Les 7 Étapes de la Méthode Merise
 
-### Avec explication détaillée des modèles MCD, MCT, MLD, MOT, MPD, MPT — Version approfondie et triplée
+### Avec explication détaillée des modèles MCD, MCT, MLD, MOT, MPD, MPT
 
 ---
 

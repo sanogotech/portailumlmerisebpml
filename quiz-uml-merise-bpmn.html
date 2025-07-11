@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Niveau : UML, Merise & BPMN</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts (Inter for modern look) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-dark: #2c3e50; /* Dark blue-grey */
+            --secondary-blue: #3498db; /* Bright blue */
+            --accent-orange: #e67e22; /* Carrot Orange for accent */
+            --success-green: #27ae60; /* Emerald green */
+            --danger-red: #e74c3c; /* Alizarin red */
+            --light-bg: #f4f7f6; /* Light grey background */
+            --card-bg: #ffffff; /* White card background */
+            --text-color: #34495e; /* Darker text */
+            --border-color: #ecf0f1; /* Light border */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            padding: 2rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            width: 100%;
+            margin: auto;
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-header h1 {
+            color: var(--primary-dark);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .quiz-header p {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .progress-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            background-color: var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar {
+            background-color: var(--secondary-blue);
+            border-radius: 5px;
+            transition: width 0.4s ease-in-out;
+        }
+
+        #question-card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            background-color: #fdfdfd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        #question-text {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            color: var(--primary-dark);
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background-color: var(--card-bg);
+            transition: all 0.2s ease;
+            color: var(--text-color);
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: var(--accent-orange);
+            background-color: #fdf5f0;
+            transform: translateY(-2px);
+        }
+        
+        .option-btn.selected {
+            background-color: #e0f2f7; /* Light blue */
+            border-color: var(--secondary-blue);
+            font-weight: 600;
+        }
+
+        .option-btn.correct {
+            background-color: #e9f7ef; /* Light green */
+            border-color: var(--success-green);
+            color: var(--success-green);
+            font-weight: 700;
+        }
+
+        .option-btn.incorrect {
+            background-color: #fdeded; /* Light red */
+            border-color: var(--danger-red);
+            color: var(--danger-red);
+            font-weight: 700;
+        }
+
+        #explanation-box {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        #explanation-box h5 {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .explanation-correct {
+             background-color: #e9f7ef;
+             border-left: 5px solid var(--success-green);
+        }
+        .explanation-correct h5 { color: var(--success-green); }
+
+        .explanation-incorrect {
+            background-color: #fdeded;
+            border-left: 5px solid var(--danger-red);
+        }
+        .explanation-incorrect h5 { color: var(--danger-red); }
+
+        .explanation-text {
+            color: var(--text-color);
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .nav-btn {
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-header {
+            background-color: var(--primary-dark);
+            color: var(--card-bg);
+            border-bottom: none;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .modal-title-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            color: var(--secondary-blue);
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .final-score {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .score-text {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 1rem;
+            color: var(--card-bg);
+            background-color: var(--secondary-blue); /* Default */
+        }
+
+        .level-novice { background-color: #7f8c8d; } /* Grey */
+        .level-debutant { background-color: #e67e22; } /* Carrot orange */
+        .level-intermediaire { background-color: #3498db; } /* Peter river blue */
+        .level-avance { background-color: #27ae60; } /* Emerald green */
+        .level-expert { background-color: #8e44ad; } /* Wisteria purple */
+
+        #final-recommendations h4 {
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        #final-recommendations ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #final-recommendations ul li {
+            background-color: #f0f3f5;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 0.6rem;
+            border-left: 4px solid var(--secondary-blue);
+            font-size: 0.95rem;
+        }
+        #final-recommendations ul li i {
+            margin-right: 0.8rem;
+            color: var(--secondary-blue);
+        }
+
+        .modal-footer {
+            border-top: none;
+            background-color: var(--light-bg);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1><i class="fas fa-sitemap" style="color:var(--secondary-blue);"></i> Quiz de Niveau : UML, Merise & BPMN</h1>
+                <p>Évaluez vos connaissances en conception et modélisation à travers 40 questions.</p>
+            </div>
+
+            <div class="progress-section">
+                <span id="question-counter">Question 1 / 40</span>
+                <span id="current-score">Score: 0</span>
+            </div>
+            <div class="progress">
+                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 2.5%;" aria-valuenow="2.5" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+
+            <div id="question-card">
+                <h2 id="question-text">Chargement de la question...</h2>
+                <div id="options-container">
+                    <!-- Les boutons d'options seront insérés ici par JavaScript -->
+                </div>
+                <div id="explanation-box" class="d-none">
+                    <h5 id="explanation-title"></h5>
+                    <p id="explanation-text" class="explanation-text"></p>
+                </div>
+            </div>
+
+            <div class="quiz-navigation">
+                <button id="next-btn" class="btn btn-primary nav-btn" disabled>Suivant <i class="fas fa-arrow-right"></i></button>
+                <button id="finish-btn" class="btn btn-success nav-btn d-none">Terminer & Voir les Résultats</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for results -->
+    <div class="modal fade" id="resultsModal" tabindex="-1" aria-labelledby="resultsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultsModalLabel"><i class="fas fa-award modal-title-icon"></i>Vos Résultats du Test de Niveau</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <h4 class="score-text">Votre score final est :</h4>
+                    <p class="final-score" id="final-score-percentage">0%</p>
+                    <p class="text-muted fs-5">
+                        <span id="final-score-correct">0</span> sur 
+                        <span id="final-score-total">0</span> bonnes réponses
+                    </p>
+                    <hr>
+                    <h4 class="mt-4">Votre Niveau :</h4>
+                    <span id="level-badge" class="level-badge"></span>
+                    <div id="final-recommendations" class="text-start mt-4"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="restart-quiz-btn"><i class="fas fa-redo"></i> Recommencer le test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- DATASET DES QUESTIONS ---
+        const quizData = {
+            questions: [
+                { question: "Quelle méthode de modélisation utiliseriez-vous principalement pour représenter les interactions entre les utilisateurs et un système ?", options: ["Merise", "UML", "BPMN", "SQL"], correctAnswer: "UML", explanation: "UML est conçu pour modéliser les objets et leurs interactions, y compris les cas d'utilisation pour les interactions utilisateur-système." },
+                { question: "Dans l'analogie de la construction d'une maison, à quoi correspond Merise ?", options: ["Les plans des pièces et leurs interactions", "La liste des matériaux et leur agencement", "Le déroulement du chantier", "La décoration intérieure"], correctAnswer: "La liste des matériaux et leur agencement", explanation: "Merise se concentre sur la structuration des données, similaire à la gestion des matériaux pour une construction." },
+                { question: "Quel diagramme UML est utilisé pour décrire les fonctionnalités qu'un système offre aux acteurs externes ?", options: ["Diagramme de Classes", "Diagramme de Séquence", "Diagramme de Cas d'Utilisation", "Diagramme d'Activité"], correctAnswer: "Diagramme de Cas d'Utilisation", explanation: "Le diagramme de cas d'utilisation représente les interactions fonctionnelles entre les acteurs et le système." },
+                { question: "Quelle est la principale différence entre un 'acteur' et un 'utilisateur' dans un diagramme de cas d'utilisation UML ?", options: ["L'acteur est une personne réelle, l'utilisateur est un système.", "L'acteur est un rôle joué, l'utilisateur est la personne ou le système qui joue ce rôle.", "Il n'y a aucune différence, les termes sont interchangeables.", "L'acteur est toujours un humain, l'utilisateur peut être un système."], correctAnswer: "L'acteur est un rôle joué, l'utilisateur est la personne ou le système qui joue ce rôle.", explanation: "Un acteur représente un rôle abstrait (ex: 'Client', 'Système de Paiement'), tandis qu'un utilisateur est l'instance concrète qui interagit." },
+                { question: "Dans un diagramme de classes UML, comment représente-t-on les actions que peut effectuer un objet ?", options: ["Par des attributs", "Par des associations", "Par des méthodes (opérations)", "Par des cardinalités"], correctAnswer: "Par des méthodes (opérations)", explanation: "Les méthodes (ou opérations) décrivent le comportement et les actions que les objets d'une classe peuvent effectuer." },
+                { question: "Quel est l'objectif du Modèle Conceptuel de Données (MCD) en Merise ?", options: ["Décrire l'architecture physique de la base de données.", "Représenter les processus métier de l'organisation.", "Modéliser la structure logique de l'application.", "Identifier et organiser les données de manière conceptuelle, indépendamment de toute contrainte technique."], correctAnswer: "Identifier et organiser les données de manière conceptuelle, indépendamment de toute contrainte technique.", explanation: "Le MCD se concentre sur 'ce qu'on veut représenter' en termes de données et leurs relations, sans considération technique." },
+                { question: "Selon la règle mnémotechnique de Merise, qu'est-ce qu'une 'association' ?", options: ["Un nom", "Un verbe", "Un attribut", "Une cardinalité"], correctAnswer: "Un verbe", explanation: "Les associations décrivent les liens ou actions entre les entités, d'où la métaphore du verbe (ex: 'passe', 'contient')." },
+                { question: "Quel est l'un des trois niveaux de modélisation en Merise ?", options: ["Niveau Technique", "Niveau Visuel", "Niveau Conceptuel", "Niveau Fonctionnel"], correctAnswer: "Niveau Conceptuel", explanation: "Le niveau conceptuel est le premier niveau en Merise, définissant le 'quoi'." },
+                { question: "En BPMN, quel symbole représente une tâche ?", options: ["Un cercle", "Un losange", "Un rectangle aux bords arrondis", "Une flèche"], correctAnswer: "Un rectangle aux bords arrondis", explanation: "Un rectangle aux bords arrondis est le symbole standard pour une tâche, représentant une activité ou un travail à accomplir." },
+                { question: "Quelle est la principale utilité du BPMN ?", options: ["Concevoir l'interface utilisateur d'une application.", "Structurer les données d'une base de données.", "Modéliser le déroulement des processus métier d'une organisation.", "Décrire l'interaction entre objets logiciels."], correctAnswer: "Modéliser le déroulement des processus métier d'une organisation.", explanation: "BPMN (Business Process Model and Notation) est spécifiquement conçu pour représenter les flux de travail et les processus métier." },
+                { question: "Quelle est l'une des astuces mentionnées pour utiliser Draw.io avec des librairies gratuites ?", options: ["Utiliser des couleurs différentes pour chaque diagramme.", "Chercher 'BPMN shapes' et importer la librairie 'UML'.", "Exporter les diagrammes en format PDF uniquement.", "N'utiliser que les formes de base pour la simplicité."], correctAnswer: "Chercher 'BPMN shapes' et importer la librairie 'UML'.", explanation: "Draw.io permet d'importer des librairies de formes, y compris celles pour BPMN et UML." },
+                { question: "Quelle méthode est la plus facile à prendre en main pour un débutant selon la comparaison fournie ?", options: ["UML", "Merise", "BPMN", "SQL"], correctAnswer: "BPMN", explanation: "BPMN est classé comme 'Très facile' pour les débutants grâce à sa nature visuelle et intuitive de processus." },
+                { question: "Quel outil est recommandé pour dessiner un MLD et générer le SQL ?", options: ["StarUML", "Bizagi Modeler", "DB Designer", "UMLet"], correctAnswer: "DB Designer", explanation: "DB Designer est spécifiquement conçu pour la modélisation de bases de données, y compris le MLD et la génération de SQL." },
+                { question: "Dans un MCD Merise, à quoi correspond une cardinalité '1-N' entre deux entités ?", options: ["Une entité est liée à exactement une autre entité.", "Une entité est liée à zéro ou plusieurs autres entités.", "Une entité est liée à une ou plusieurs autres entités.", "Plusieurs entités sont liées à une seule entité."], correctAnswer: "Une entité est liée à une ou plusieurs autres entités.", explanation: "La cardinalité 1-N (ou 1,N) signifie qu'une instance de la première entité est liée à au moins une et jusqu'à plusieurs instances de la seconde entité." },
+                { question: "Quelle est l'orientation principale de la méthode Merise ?", options: ["Objet", "Processus", "Données", "Interface utilisateur"], correctAnswer: "Données", explanation: "Merise est une méthode axée sur les données, privilégiant la modélisation des informations avant les traitements." },
+                { question: "Quelle affirmation est vraie concernant l'utilisation combinée des méthodes (UML, Merise, BPMN) ?", options: ["Elles sont mutuellement exclusives et ne peuvent pas être utilisées ensemble.", "UML est utilisé pour les processus, Merise pour les interfaces, et BPMN pour les données.", "Elles peuvent être combinées pour modéliser différents aspects d'un projet, par exemple UML pour les acteurs, Merise pour les données et BPMN pour les processus.", "Seul UML peut modéliser tous les aspects d'un projet informatique."], correctAnswer: "Elles peuvent être combinées pour modéliser différents aspects d'un projet, par exemple UML pour les acteurs, Merise pour les données et BPMN pour les processus.", explanation: "Chaque méthode excelle dans un domaine particulier, et leur combinaison offre une vue complète d'un système." },
+                { question: "Quel événement est représenté par un cercle en BPMN ?", options: ["Une tâche", "Une passerelle", "Un événement (début, fin, intermédiaire)", "Un flux de séquence"], correctAnswer: "Un événement (début, fin, intermédiaire)", explanation: "Les cercles sont utilisés pour marquer le début, la fin ou des événements intermédiaires dans un processus BPMN." },
+                { question: "Quel langage de base de données est souvent généré à partir du modèle logique de données (MLD) en Merise ?", options: ["Java", "Python", "SQL", "HTML"], correctAnswer: "SQL", explanation: "SQL (Structured Query Language) est le langage standard pour la gestion des bases de données relationnelles, et le MLD est conçu pour être transformé en schéma SQL." },
+                { question: "Quel type de modélisation est représenté par l'infographie '[UML] Objets → Diagramme de Classe' ?", options: ["Processus métier", "Structure des données", "Orientée objet", "Flux de travail"], correctAnswer: "Orientée objet", explanation: "UML est une méthode de modélisation orientée objet, et le diagramme de classes est un de ses outils fondamentaux pour représenter les objets et leurs relations." },
+                { question: "Quelle est la métaphore utilisée pour UML dans la section de comparaison ?", options: ["Recette de cuisine", "Plan de base de données", "Film d’action", "Livre de recettes"], correctAnswer: "Film d’action", explanation: "La métaphore du 'film d'action' est utilisée pour UML, soulignant son aspect dynamique et la description des interactions." },
+                { question: "Dans l'exercice sur une classe 'CompteBancaire', quels seraient des attributs appropriés ?", options: ["Dépenser, Créditer", "Solde, Numéro", "Client, Banque", "Ouverture, Fermeture"], correctAnswer: "Solde, Numéro", explanation: "'Solde' et 'Numéro' sont des propriétés qui décrivent l'état d'un compte bancaire, ce qui en fait des attributs appropriés." },
+                { question: "Si vous voulez modéliser un processus 'Commande de pizza en ligne' avec des décisions, quelle méthode utiliseriez-vous ?", options: ["UML (Diagramme de Classes)", "Merise (MCD)", "BPMN", "SQL"], correctAnswer: "BPMN", explanation: "BPMN est spécifiquement conçu pour modéliser les processus métier, y compris les tâches, les événements et les passerelles (décisions)." },
+                { question: "Quelle est l'orientation principale d'UML ?", options: ["Données", "Processus", "Objet", "Fonctionnelle"], correctAnswer: "Objet", explanation: "UML (Unified Modeling Language) est un langage de modélisation unifié orienté objet." },
+                { question: "En Merise, après avoir créé le MCD, quelle est l'étape suivante pour préparer une base de données ?", options: ["Créer les formulaires d'interface utilisateur.", "Développer le Modèle Logique de Données (MLD).", "Implémenter le code SQL directement.", "Définir les cas d'utilisation."], correctAnswer: "Développer le Modèle Logique de Données (MLD).", explanation: "Le MLD transforme le MCD conceptuel en une structure logique adaptée aux systèmes de gestion de bases de données, avec des tables et des clés." },
+                { question: "Dans un processus BPMN, à quoi sert une 'passerelle' (losange) ?", options: ["Indiquer le début ou la fin d'un processus.", "Représenter une activité ou une tâche.", "Gérer le flux de séquence en fonction de conditions.", "Envoyer un message à un autre processus."], correctAnswer: "Gérer le flux de séquence en fonction de conditions.", explanation: "Les passerelles sont utilisées pour contrôler le flux d'un processus en introduisant des points de décision, de divergence ou de convergence." },
+                { question: "Quelle est la fonction d'un 'attribut' dans une classe UML ?", options: ["Décrire une action que la classe peut effectuer.", "Représenter une relation entre deux classes.", "Définir une propriété ou une donnée que les objets de la classe possèdent.", "Modéliser un événement qui se produit."], correctAnswer: "Définir une propriété ou une donnée que les objets de la classe possèdent.", explanation: "Les attributs stockent l'information ou l'état des objets d'une classe." },
+                { question: "Dans Merise, qu'est-ce qu'une 'entité' ?", options: ["Un verbe représentant une action.", "Un processus métier.", "Un objet concret ou abstrait du monde réel qui présente un intérêt.", "Une ligne de code SQL."], correctAnswer: "Un objet concret ou abstrait du monde réel qui présente un intérêt.", explanation: "Une entité représente une chose (personne, lieu, concept, etc.) pour laquelle on stocke des informations." },
+                { question: "Quel outil gratuit est spécifiquement mentionné comme 'simple, idéal pour diagrammes UML rapides' ?", options: ["Mocodo", "Lucidchart", "UMLet", "Draw.io"], correctAnswer: "UMLet", explanation: "UMLet est un outil léger et intuitif, souvent apprécié pour la création rapide de diagrammes UML." },
+                { question: "Quelle est la métaphore utilisée pour BPMN dans la section de comparaison ?", options: ["Film d’action", "Plan de base de données", "Recette de cuisine", "Schéma électrique"], correctAnswer: "Recette de cuisine", explanation: "La 'recette de cuisine' illustre bien la nature pas à pas et ordonnée des processus modélisés par BPMN." },
+                { question: "Quand est-ce qu'UML est né ?", options: ["Dans les années 70", "Dans les années 80", "Dans les années 90", "Au début des années 2000"], correctAnswer: "Dans les années 90", explanation: "UML est né dans les années 90 dans le but d'unifier les différentes méthodes orientées objet existantes." },
+                { question: "Quelle est la principale caractéristique d'une équipe 'cross-fonctionnelle' dans un contexte Agile ?", options: ["Chaque membre peut effectuer toutes les tâches.", "Elle possède toutes les compétences nécessaires pour créer un Incrément.", "Elle est composée de membres de différents départements.", "Elle travaille sur plusieurs projets simultanément."], correctAnswer: "Elle possède toutes les compétences nécessaires pour créer un Incrément.", explanation: "Une équipe cross-fonctionnelle dispose de l'ensemble des compétences requises pour livrer un produit complet sans dépendre d'équipes externes." },
+                { question: "Quel est le niveau de modélisation Merise qui se transforme en tables SQL ?", options: ["Conceptuel (MCD)", "Logique (MLD)", "Physique (MPD)", "Fonctionnel (MCT)"], correctAnswer: "Logique (MLD)", explanation: "Le Modèle Logique de Données (MLD) est la représentation des données sous forme de tables relationnelles, directement transposable en SQL." },
+                { question: "Quel diagramme UML est souvent utilisé pour modéliser le flux de travail, similaire à BPMN ?", options: ["Diagramme de Cas d'Utilisation", "Diagramme de Classes", "Diagramme d'Activité", "Diagramme de Séquence"], correctAnswer: "Diagramme d'Activité", explanation: "Le diagramme d'activité UML est conçu pour modéliser le flux de contrôle d'une activité, y compris les chemins parallèles et les décisions." },
+                { question: "Si vous devez modéliser des entités et associations pour la gestion de prêts de skis, quelle méthode est la plus appropriée ?", options: ["UML", "Merise", "BPMN", "MCT"], correctAnswer: "Merise", explanation: "La tâche ('identifier des entités', 'dessiner des associations avec cardinalités') est une description directe de la création d'un MCD en Merise." },
+                { question: "Quelle est la signification d'un 'Pool' et des 'Couloirs' en BPMN ?", options: ["Des zones pour les différentes tâches d'un processus.", "Ils représentent des acteurs ou des rôles au sein d'un processus.", "Des boucles de répétition dans un processus.", "Des étapes de décision dans un processus."], correctAnswer: "Ils représentent des acteurs ou des rôles au sein d'un processus.", explanation: "Un 'Pool' représente un participant (une organisation), et les 'Couloirs' (Lanes) au sein d'un pool divisent le travail entre des rôles ou des unités spécifiques." },
+                { question: "Quel outil est le plus adapté pour modéliser un processus pas à pas en BPMN ?", options: ["DB Designer", "Modelio", "Bizagi Modeler", "StarUML"], correctAnswer: "Bizagi Modeler", explanation: "Bizagi Modeler est cité comme 'Idéal pour modéliser un processus pas à pas' en BPMN, grâce à son interface intuitive pour les flux de travail." },
+                { question: "Quelle affirmation est vraie concernant l'évolution de BPMN ?", options: ["BPMN 1.0 permettait d'exécuter des processus directement.", "BPMN 2.0 permet d'exécuter des processus directement.", "BPMN a été remplacé par un autre standard en 2020.", "BPMN est uniquement un outil de documentation."], correctAnswer: "BPMN 2.0 permet d'exécuter des processus directement.", explanation: "BPMN 2.0 a introduit des éléments qui le rendent exécutable, permettant l'automatisation des processus avec des moteurs comme Camunda." },
+                { question: "Pourquoi commencer la modélisation avec un crayon et du papier ?", options: ["Pour économiser l'électricité.", "Pour forcer la réflexion conceptuelle avant les outils.", "Parce que tous les outils de modélisation sont payants.", "Pour pratiquer le dessin artistique."], correctAnswer: "Pour forcer la réflexion conceptuelle avant les outils.", explanation: "Le papier et le crayon permettent une conception libre et rapide, encourageant la réflexion avant de passer au numérique." },
+                { question: "Quel est le terme pour ce que fait l'utilisateur avec le système, représenté par des ovales en UML ?", options: ["MCD", "Use Case", "BPMN", "MLD"], correctAnswer: "Use Case", explanation: "Le 'Use Case' (Cas d'Utilisation) est un concept clé d'UML qui décrit une fonctionnalité du système du point de vue de l'acteur." },
+                { question: "Pour quelle utilisation typique la méthode Merise est-elle la plus recommandée ?", options: ["Application mobile", "Processus métier, entreprise", "Film d'action", "Système de gestion interne"], correctAnswer: "Système de gestion interne", explanation: "Merise est particulièrement adaptée à la conception de systèmes d'information internes basés sur des bases de données structurées." }
+            ]
+        };
+
+        // --- DOM ELEMENTS ---
+        const questionCounterEl = document.getElementById('question-counter');
+        const currentScoreEl = document.getElementById('current-score');
+        const progressBarEl = document.getElementById('progress-bar');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const explanationBoxEl = document.getElementById('explanation-box');
+        const explanationTitleEl = document.getElementById('explanation-title');
+        const explanationTextEl = document.getElementById('explanation-text');
+        const nextBtn = document.getElementById('next-btn');
+        const finishBtn = document.getElementById('finish-btn');
+        
+        // --- MODAL ELEMENTS ---
+        const resultsModal = new bootstrap.Modal(document.getElementById('resultsModal'));
+        const finalScoreCorrectEl = document.getElementById('final-score-correct');
+        const finalScoreTotalEl = document.getElementById('final-score-total');
+        const finalScorePercentageEl = document.getElementById('final-score-percentage');
+        const levelBadgeEl = document.getElementById('level-badge');
+        const finalRecommendationsEl = document.getElementById('final-recommendations');
+        const restartQuizBtn = document.getElementById('restart-quiz-btn');
+
+        // --- QUIZ STATE ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let questions = []; // Shuffled questions
+        let answeredCurrentQuestion = false;
+
+        // --- FUNCTIONS ---
+
+        /**
+         * Shuffles an array in place.
+         * @param {Array} array The array to shuffle.
+         * @returns {Array} The shuffled array.
+         */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        /**
+         * Initializes and starts the quiz.
+         */
+        function startQuiz() {
+            questions = shuffleArray([...quizData.questions]);
+            currentQuestionIndex = 0;
+            score = 0;
+            answeredCurrentQuestion = false;
+            nextBtn.classList.remove('d-none');
+            finishBtn.classList.add('d-none');
+            resultsModal.hide();
+            displayQuestion(currentQuestionIndex);
+            updateScoreDisplay();
+        }
+
+        /**
+         * Displays a question and its options.
+         * @param {number} index The index of the question to display.
+         */
+        function displayQuestion(index) {
+            answeredCurrentQuestion = false;
+            explanationBoxEl.classList.add('d-none');
+            nextBtn.disabled = true;
+
+            if (index >= questions.length) {
+                showFinalResults();
+                return;
+            }
+
+            const question = questions[index];
+            questionTextEl.textContent = question.question;
+            optionsContainerEl.innerHTML = '';
+
+            const shuffledOptions = shuffleArray([...question.options]);
+
+            shuffledOptions.forEach(optionText => {
+                const button = document.createElement('button');
+                button.textContent = optionText;
+                button.classList.add('btn', 'option-btn');
+                button.onclick = () => selectAnswer(button, optionText, index);
+                optionsContainerEl.appendChild(button);
+            });
+            
+            updateProgressBar();
+        }
+        
+        /**
+         * Handles the user's answer selection.
+         * @param {HTMLButtonElement} button The button element that was clicked.
+         * @param {string} selectedAnswer The text of the selected answer.
+         * @param {number} questionIndex The index of the current question.
+         */
+        function selectAnswer(button, selectedAnswer, questionIndex) {
+            if (answeredCurrentQuestion) return;
+            answeredCurrentQuestion = true;
+            
+            const question = questions[questionIndex];
+            const isCorrect = selectedAnswer === question.correctAnswer;
+            
+            if(isCorrect) {
+                score++;
+            }
+            
+            updateScoreDisplay();
+            showAnswerFeedback(isCorrect, question);
+            nextBtn.disabled = false;
+            
+            Array.from(optionsContainerEl.children).forEach(btn => {
+                btn.disabled = true;
+                if(btn.textContent === question.correctAnswer) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selectedAnswer) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.classList.add('d-none');
+                finishBtn.classList.remove('d-none');
+            }
+        }
+
+        /**
+         * Shows feedback for the selected answer.
+         * @param {boolean} isCorrect Whether the answer was correct.
+         * @param {object} question The current question object.
+         */
+        function showAnswerFeedback(isCorrect, question) {
+            explanationBoxEl.classList.remove('d-none');
+            if (isCorrect) {
+                explanationTitleEl.textContent = "Correct !";
+                explanationBoxEl.classList.add('explanation-correct');
+                explanationBoxEl.classList.remove('explanation-incorrect');
+            } else {
+                explanationTitleEl.textContent = "Incorrect";
+                explanationBoxEl.classList.add('explanation-incorrect');
+                explanationBoxEl.classList.remove('explanation-correct');
+            }
+            explanationTextEl.textContent = question.explanation;
+        }
+
+        /**
+         * Updates the score and question counter display.
+         */
+        function updateScoreDisplay() {
+            currentScoreEl.textContent = `Score: ${score}`;
+            questionCounterEl.textContent = `Question ${currentQuestionIndex + 1} / ${questions.length}`;
+        }
+
+        /**
+         * Updates the progress bar.
+         */
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBarEl.style.width = `${progress}%`;
+            progressBarEl.setAttribute('aria-valuenow', progress);
+        }
+
+        /**
+         * Handles the click of the "Next" button.
+         */
+        function handleNext() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion(currentQuestionIndex);
+            } else {
+                showFinalResults();
+            }
+        }
+
+        /**
+         * Determines the user's level and provides recommendations based on their score.
+         * @param {number} percentage The final score percentage.
+         * @returns {object} An object containing the level, CSS class, and recommendations HTML.
+         */
+        function determineLevelAndRecommendations(percentage) {
+            let level, levelClass, recommendations;
+
+            if (percentage >= 90) {
+                level = "Expert en Systèmes d'Information";
+                levelClass = "level-expert";
+                recommendations = `
+                    <h4><i class="fas fa-crown"></i> Félicitations, Expert(e) !</h4>
+                    <p>Votre maîtrise d'UML, Merise et BPMN est exceptionnelle. Vous êtes prêt(e) à architecturer des systèmes complexes.</p>
+                    <h5><i class="fas fa-route"></i> Prochaines étapes :</h5>
+                    <ul>
+                        <li><i class="fas fa-project-diagram"></i> Explorez des patterns d'architecture avancés (Microservices, DDD).</li>
+                        <li><i class="fas fa-search-plus"></i> Plongez dans les spécifications détaillées des langages de modélisation.</li>
+                        <li><i class="fas fa-users-cog"></i> Partagez votre expertise en devenant mentor ou formateur.</li>
+                    </ul>`;
+            } else if (percentage >= 70) {
+                level = "Concepteur Confirmé";
+                levelClass = "level-avance";
+                recommendations = `
+                    <h4><i class="fas fa-check-circle"></i> Très bien, Concepteur(rice) Confirmé(e) !</h4>
+                    <p>Vous avez une excellente compréhension des trois méthodes. Vous pouvez les appliquer efficacement sur des projets réels.</p>
+                    <h5><i class="fas fa-route"></i> Prochaines étapes :</h5>
+                    <ul>
+                        <li><i class="fas fa-cogs"></i> Appliquez vos connaissances sur des études de cas complexes.</li>
+                        <li><i class="fas fa-tools"></i> Maîtrisez un outil de modélisation avancé (ex: Enterprise Architect, Modelio).</li>
+                        <li><i class="fas fa-arrows-alt-h"></i> Étudiez la synergie et la transformation entre les modèles (ex: UML vers Merise).</li>
+                    </ul>`;
+            } else if (percentage >= 50) {
+                level = "Architecte en Herbe";
+                levelClass = "level-intermediaire";
+                recommendations = `
+                    <h4><i class="fas fa-info-circle"></i> Bonnes bases, Architecte en herbe !</h4>
+                    <p>Vous comprenez les concepts fondamentaux. Il est temps de renforcer la pratique.</p>
+                    <h5><i class="fas fa-route"></i> Prochaines étapes :</h5>
+                    <ul>
+                        <li><i class="fas fa-redo-alt"></i> Revoyez les différences clés entre MCD (Merise) et diagramme de classes (UML).</li>
+                        <li><i class="fas fa-stream"></i> Pratiquez la modélisation de processus BPMN de bout en bout.</li>
+                        <li><i class="fas fa-book-reader"></i> Lisez des articles comparant les approches sur des cas concrets.</li>
+                    </ul>`;
+            } else {
+                level = "Novice en Modélisation";
+                levelClass = "level-debutant";
+                recommendations = `
+                    <h4><i class="fas fa-seedling"></i> C'est un bon début, Novice en modélisation !</h4>
+                    <p>Vous commencez votre parcours. Concentrez-vous sur les objectifs de chaque méthode.</p>
+                    <h5><i class="fas fa-route"></i> Prochaines étapes :</h5>
+                    <ul>
+                        <li><i class="fas fa-graduation-cap"></i> Reprenez l'analogie de la maison : UML (plans), Merise (matériaux), BPMN (chantier).</li>
+                        <li><i class="fas fa-video"></i> Suivez des tutoriels vidéo pour chaque type de diagramme de base.</li>
+                        <li><i class="fas-sticky-note"></i> Créez des fiches de révision pour les symboles clés (acteurs, entités, tâches, etc.).</li>
+                    </ul>`;
+            }
+            return { level, levelClass, recommendations };
+        }
+
+        /**
+         * Displays the final results in a modal.
+         */
+        function showFinalResults() {
+            const percentage = (score / questions.length) * 100;
+            const { level, levelClass, recommendations } = determineLevelAndRecommendations(percentage);
+
+            finalScoreCorrectEl.textContent = score;
+            finalScoreTotalEl.textContent = questions.length;
+            finalScorePercentageEl.textContent = `${percentage.toFixed(0)}%`;
+            finalScorePercentageEl.style.color = getScoreColor(percentage);
+            
+            levelBadgeEl.textContent = level;
+            levelBadgeEl.className = `level-badge ${levelClass}`;
+            finalRecommendationsEl.innerHTML = recommendations;
+
+            resultsModal.show();
+        }
+
+        /**
+         * Gets a color based on the score percentage.
+         * @param {number} percentage The final score percentage.
+         * @returns {string} A CSS color variable.
+         */
+        function getScoreColor(percentage) {
+            if (percentage >= 90) return 'var(--success-green)';
+            if (percentage >= 70) return '#8e44ad'; // Expert purple
+            if (percentage >= 50) return 'var(--secondary-blue)';
+            return 'var(--accent-orange)';
+        }
+
+        // --- EVENT LISTENERS ---
+        nextBtn.addEventListener('click', handleNext);
+        finishBtn.addEventListener('click', showFinalResults);
+        restartQuizBtn.addEventListener('click', () => {
+            resultsModal.hide();
+            // Wait for modal to fade out before restarting
+            setTimeout(startQuiz, 500); 
+        });
+        
+        // --- INITIAL CALL ---
+        document.addEventListener('DOMContentLoaded', startQuiz);
+    </script>
+</body>
+</html>

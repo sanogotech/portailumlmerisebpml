@@ -78,10 +78,6 @@ Dans le monde complexe du développement des systèmes d’information, les mét
 
 ---
 
-Voici une **comparaison approfondie** des méthodes **UML**, **Merise** et **BPMN**, avec un **arbre de décision complet**, une section sur **les synergies possibles**, ainsi que **des cas pratiques**, **top 5 exemples d'application**, et **retours d'expérience (REX)**.
-
----
-
 # 🔍 Comparaison approfondie des méthodes : UML vs Merise vs BPMN
 
 | **Critère**                | **UML**                                       | **Merise**                          | **BPMN**                                          |
@@ -267,6 +263,4 @@ Ce portail représente une **véritable boîte à outils pour les concepteurs, m
 * **Use Case** : Cas d’utilisation (UML)
 * **Swimlanes** : Lignes d’acteurs dans BPMN
 
----
 
-Souhaitez-vous que je transforme cet article en **PDF téléchargeable**, **page web** ou **cours modulaire** ?
